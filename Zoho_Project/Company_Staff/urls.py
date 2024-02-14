@@ -154,6 +154,7 @@ urlpatterns = [
     path('journal_overview/<int:journal_id>/', views.journal_overview, name='journal_overview'),
     path('journal',views.journal,name="journal"),
     path('import_journal_list',views.import_journal_list,name='import_journal_list'),
+    path('update_journal_status/<int:id>/', views.update_journal_status, name='update_journal_status'),
     
   
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),

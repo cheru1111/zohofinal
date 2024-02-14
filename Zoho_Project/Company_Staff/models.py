@@ -473,6 +473,7 @@ class JournalEntry(models.Model):
     journal = models.ForeignKey(Journal, on_delete=models.CASCADE,null=True)
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
     login = models.ForeignKey(LoginDetails, on_delete=models.CASCADE, null=True, blank=True)
+    staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     account = models.CharField(max_length=200,null=True)
     description = models.TextField(null=True)
     contact = models.CharField(max_length=200,null=True)
@@ -482,6 +483,7 @@ class JournalEntry(models.Model):
 class JournalTransactionHistory(models.Model):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE)
     login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE)
+    staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     journal= models.ForeignKey(JournalEntry, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True,null=True)
     action_choices = [

@@ -5528,6 +5528,8 @@ def manual_journal(request):
         journal = Journal.objects.filter(company=dash_details)
         print('cat')
         #print(journal)
+        journal_entries = JournalEntry.objects.filter(journal__in=journal,company=dash_details)
+        print(journal_entries)
         allmodules= ZohoModules.objects.get(company=dash_details,status='New')
         print('dog')
         print(allmodules)
@@ -5548,6 +5550,7 @@ def manual_journal(request):
             'details':dash_details,
             'allmodules': allmodules,
             'journal': journal,
+            'journal_entries':journal_entries,
             'sort_option': sort_option,
             'filter_option': filter_option,
         }
@@ -5561,12 +5564,14 @@ def manual_journal(request):
         journal = Journal.objects.filter(staff=dash_details)
         print('lotus')
         #print(journal)
+        journal_entries = JournalEntry.objects.filter(journal__in=journal,staff=dash_details)
+        print(journal_entries)
         allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
         print('rose')
         print(allmodules)
         sort_option = request.GET.get('sort', 'all')  
         filter_option = request.GET.get('filter', 'all')
-        if sort_option == 'journal_no':
+        if sort_option == 'journal_nojournal_no':
             journal = journal.order_by('journal_no')
         elif sort_option == 'total_debit':
             journal = journal.order_by('total_debit')
@@ -5581,6 +5586,7 @@ def manual_journal(request):
             'details':dash_details,
             'allmodules': allmodules,
             'journal': journal,
+            'journal_entries':journal_entries,
             'sort_option': sort_option,
             'filter_option': filter_option,
         }
@@ -5738,6 +5744,100 @@ def import_journal_list(request):
         return redirect('/')
 
     return redirect('manual_journal')
+
+
+
+'''def import_loan_accounts(request):
+    sid = request.session.get('staff_id')
+    staff = staff_details.objects.get(id=sid)
+    cmp = company.objects.get(id=staff.company.id)
+
+    if request.method == 'POST' and 'exceladd' in request.FILES:
+        excel_file = request.FILES['exceladd']
+
+        excel_data = load_workbook(excel_file, read_only=True)
+        sheet = excel_data.active  
+        current_balance = Decimal(request.POST.get('current_balance', 0))
+
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            raw_date, lender_bank, account_name, account_number, description, loan_amount, loan_received, \
+            cheque_number, upi_id, interest_rate_raw, duration, fee, lr, cheque_number_for_fee, upi_id_for_fee = row
+
+            if interest_rate_raw is not None:
+                try:
+                    interest_rate = float(interest_rate_raw)
+                except ValueError:
+                    interest_rate = float(str(interest_rate_raw).rstrip('%'))
+            else:
+                interest_rate = None
+
+            formatted_date = (
+                raw_date.strftime('%Y-%m-%d') if raw_date else None
+            )
+            total_amount = Decimal(loan_amount) + Decimal(interest_rate)
+        if LoanAccounts.objects.filter(account_number=account_number  ,company_id=cmp).exists():
+            messages.info(request, 'Account number is already taken')
+            return redirect('loan_accounts')
+        elif LoanAccounts.objects.filter(account_name=account_name , company_id=cmp).exists():
+            messages.info(request, 'Account name is already taken')
+            return redirect('loan_accounts')
+        else:
+            new_loan_account = LoanAccounts.objects.create(
+                cheque_number_for_fee=cheque_number_for_fee,
+                lender_bank=lender_bank,
+                account_number=account_number,
+                loan_amount=loan_amount,
+                date=formatted_date,
+                loan_received=loan_received,
+                interest_rate=interest_rate,
+                duration=duration,
+                description=description,
+                proccessing_fee=fee,
+                lr=lr,
+                upi_id=upi_id,
+                upi_id_for_fee=upi_id_for_fee,
+                account_name=account_name,
+                cheque_number=cheque_number,
+                company_id=staff.company.id,
+                total_amount=str(total_amount)
+            )
+            TransactionTable.objects.create(
+                loan_account=new_loan_account,
+                balance_amount=loan_amount,company=cmp
+            )
+            LoanHistory.objects.create(
+                loan_account=new_loan_account,
+                company=cmp,
+                date=datetime.now(),
+                action='CREATED'
+            )
+
+
+        return redirect('loan_accounts')'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def check_journal_num_valid(request):
@@ -5924,14 +6024,17 @@ def journal_overview(request, journal_id):
         dash_details = CompanyDetails.objects.get(login_details=log_details)
         journal = Journal.objects.filter(company=dash_details)
         jour = get_object_or_404(Journal, id=journal_id)
+        #journal_entries = JournalEntry.objects.filter(journal__in=journal,company=dash_details)
+        journal_entries = JournalEntry.objects.filter(journal=jour)
+        
         #comments = PriceListComment.objects.filter(price_list=price_list)
         allmodules= ZohoModules.objects.get(company=dash_details,status='New')
         sort_option = request.GET.get('sort', 'all')  
         filter_option = request.GET.get('filter', 'all')
-        if sort_option == 'name':
-            journal = journal.order_by('name')
-        elif sort_option == 'type':
-            journal = journal.order_by('type')
+        if sort_option == 'journal_no':
+            journal = journal.order_by('journal_no')
+        elif sort_option == 'total_debit':
+            journal = journal.order_by('total_debit')
 
         if filter_option == 'save':
             journal = journal.filter(status='save')
@@ -5948,6 +6051,7 @@ def journal_overview(request, journal_id):
             'allmodules': allmodules,
             'journal': journal,
             'jour': jour,
+            'journal_entries':journal_entries,
             #'comments': comments,
             'sort_option': sort_option,
             'filter_option': filter_option,
@@ -5961,14 +6065,15 @@ def journal_overview(request, journal_id):
         dash_details = StaffDetails.objects.get(login_details=log_details)
         journal = Journal.objects.filter(company=dash_details.company)
         jour = get_object_or_404(Journal, id=journal_id)
+        journal_entries = JournalEntry.objects.filter(journal__in=journal,staff=dash_details)
         #comments = PriceListComment.objects.filter(price_list=price_list)
         allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
         sort_option = request.GET.get('sort', 'all')  
         filter_option = request.GET.get('filter', 'all')
-        if sort_option == 'name':
-            journal = journal.order_by('name')
-        elif sort_option == 'type':
-            journal = journal.order_by('type')
+        if sort_option == 'journal_no':
+            journal = journal.order_by('journal_no')
+        elif sort_option == 'total_debit':
+            journal = journal.order_by('total_debit')
 
         if filter_option == 'save':
             journal = journal.filter(status='save')
@@ -5984,6 +6089,7 @@ def journal_overview(request, journal_id):
             'journal': journal,
             #'comments': comments,
             'jour': jour,
+            'journal_entries':journal_entries,
             'sort_option': sort_option,
             'filter_option': filter_option,
             #'transaction_history': transaction_history,
@@ -5991,7 +6097,11 @@ def journal_overview(request, journal_id):
         }
         return render(request,'zohomodules/manual_journal/journal_list.html',context)
 
-
+def update_journal_status(request,id):
+    jo=Journal.objects.get(id=id)
+    jo.status = "save"
+    jo.save()
+    return redirect('journal_overview', id)
 
 
 

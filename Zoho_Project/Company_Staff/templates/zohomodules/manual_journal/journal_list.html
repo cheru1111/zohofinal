@@ -160,8 +160,8 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="sortDropdownMenu">
                                     <a class="dropdown-item text-dark" href="?sort=all{% if filter_option != 'all' %}&filter={{ filter_option }}{% endif %}">All</a>
-                                    <a class="dropdown-item text-dark" href="?sort=name{% if filter_option != 'all' %}&filter={{ filter_option }}{% endif %}">Name</a>
-                                    <a class="dropdown-item text-dark" href="?sort=type{% if filter_option != 'all' %}&filter={{ filter_option }}{% endif %}">Type</a>
+                                    <a class="dropdown-item text-dark" href="?sort=journal_no{% if filter_option != 'all' %}&filter={{ filter_option }}{% endif %}">Journal</a>
+                                    <a class="dropdown-item text-dark" href="?sort=total_debit{% if filter_option != 'all' %}&filter={{ filter_option }}{% endif %}">Amount</a>
                                 </div>
                             </div>
                             <div class="input-group-append ms-1">
@@ -170,8 +170,8 @@
                                 </button>
                                 <div class="dropdown-menu text-dark">
                                     <a class="dropdown-item text-dark" href="?filter=all{% if sort_option != 'name' %}&sort={{ sort_option }}{% endif %}">All</a>
-                                    <a class="dropdown-item text-dark" href="?filter=active{% if sort_option != 'name' %}&sort={{ sort_option }}{% endif %}">Active</a>
-                                    <a class="dropdown-item text-dark" href="?filter=inactive{% if sort_option != 'name' %}&sort={{ sort_option }}{% endif %}">Inactive</a>
+                                    <a class="dropdown-item text-dark" href="?filter=save{% if sort_option != 'name' %}&sort={{ sort_option }}{% endif %}">Save</a>
+                                    <a class="dropdown-item text-dark" href="?filter=draft{% if sort_option != 'name' %}&sort={{ sort_option }}{% endif %}">Draft</a>
                                 </div>
                             </div>
                             <a class="btn btn-outline-warning  ms-1" href="{% url 'add_journal' %}" role="button"> New </a>
@@ -179,7 +179,7 @@
                         <hr>
                         <div class="list-group mt-3"id="journalList">
                             {% for v in journal %}
-                            <a href="" class="list-item">
+                            <a href="{% url 'journal_overview' v.id %}" class="list-item">
                               <div class="d-flex justify-content-between text-white">
                                 <span>{{ v.date }}</span>
                                 <span><i class="fa fa-inr"></i>{{ v.total_debit }}</span>
@@ -234,11 +234,19 @@
                           </div>
             
                           <div class="col-md-6" style="text-align: center;">
-                            {% if view.status == "draft" %}
-                            <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
+                            {% if jour.status == "draft" %}
+                            <a href="{% url 'update_journal_status' jour.id %}" class="btn btn-outline-warning" title="Save">
                               <i class="fa fa-save" aria-hidden="true"></i>
                             </a>
                             {% endif %}
+
+                            <!--<button id="toggleStatusButton" class="btn btn-outline-warning ms-2 " data-status="{{ jour.status }}" onclick="toggleStatus()">
+                              {% if jour.status == 'save' %}
+                              Save
+                              {% elif jour.status == 'draft' %}
+                              Draft
+                              {% endif %}
+                          </button>-->
                             <a href="" class="text-dark">
                               <button class="btn btn-outline-warning">
                                 <i class="fa fa-edit"></i>
@@ -281,38 +289,38 @@
                           
                           <div class="gen-info col-6 " style="padding-left: 3rem; overflow-y: scroll; ">
                             <div class="row mt-1">
-                              <div class="col-5"><label class="text-dark" for="">Notes </label></div>
+                              <div class="col-5"><label  for=""style="color: #000000;">Notes </label></div>
                               <div class="col-7">
-                                <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">:{{ view.notes }}</p>
+                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.notes }}</p>
                               </div>
                             </div>
                             <div class="row mt-3">
-                              <div class="col-5"><label class="text-dark" for="">Reference no </label></div>
+                              <div class="col-5"><label style="color: #000000;" for="">Reference no </label></div>
                               
                               <div class="col-7">
-                                <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">:{{ view.reference_no}}</p>
+                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.reference_no}}</p>
                               </div>
                               
                             </div>
                             <div class="row mt-3">
-                              <div class="col-5"><label class="text-dark" for="">Journal No</label></div>
+                              <div class="col-5"><label style="color: #000000;" for="">Journal No</label></div>
                               <div class="col-7">
-                                <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">
-                                  :{{view.journal_no}}</p>
+                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
+                                  :{{jour.journal_no}}</p>
                               </div>
                             </div>
                             <div class="row mt-3">
-                              <div class="col-5"><label class="text-dark" for="">Date </label></div>
+                              <div class="col-5"><label style="color: #000000;" for="">Date </label></div>
                               <div class="col-7">
-                                <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">
-                                  :{{view.date}}</p>
+                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
+                                  :{{jour.date}}</p>
                               </div>
                             </div>
                             <div class="row mt-3">
-                              <div class="col-5"><label class="text-dark" for="">Amount </label></div>
+                              <div class="col-5"><label style="color: #000000;" for="">Amount </label></div>
                               <div class="col-7">
-                                <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">
-                                  :{{view.total_debit}}</p>
+                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
+                                  :{{jour.total_debit}}</p>
                               </div>
                             </div>
                             
@@ -322,63 +330,68 @@
                           <div class="p-info col-6" style="height: 100%; margin-bottom: 1vh;">
                             <div class="card" style="background-color: rgb(110, 61, 46); padding-left: 1rem; padding-top: 1rem;">
                               <div class="row text-center">
-                                <h2>INFORMATION
+                                <h2 style="color:white;">INFORMATION
                                   
                                 </h2>
                               </div>
-                              
-                            
                               {% for entry in journal_entries %}
                               <hr>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Account Name </label></div>
+                                <div class="col-5 text-light"><label for="">Account Name </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{entry.account}}</p>
+                                  <p class="bold text-light">:{{entry.account}}</p>
                                 </div>
                               </div>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Description </label></div>
+                                <div class="col-5 text-light"><label for="">Description </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{entry.description}}</p>
+                                  <p class="bold text-light">:{{entry.description}}</p>
                                 </div>
                               </div>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Contact </label></div>
+                                <div class="col-5 text-light"><label for="">Contact </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{entry.contact}}</p>
+                                  <p class="bold text-light">:{{entry.contact}}</p>
                                 </div>
                               </div>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Credits </label></div>
+                                <div class="col-5 text-light"><label for="">Credits </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{entry.credits}}</p>
+                                  <p class="bold text-light">:{{entry.credits}}</p>
                                 </div>
                               </div>
             
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Debits</label></div>
+                                <div class="col-5 text-light"><label for="">Debits</label></div>
                                 <div class="col">
-                                  <p class="bold">:{{entry.debits}}</p>
+                                  <p class="bold text-light">:{{entry.debits}}</p>
                                 </div>
                               </div>
                               {% endfor %}
                               <hr>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Total Debit </label></div>
+                                <div class="col-5 text-light"><label for="">Total Debit </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{view.total_debit}}</p>
+                                  <p class="bold text-light">:{{jour.total_debit}}</p>
                                 </div>
                               </div>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Total Credit </label></div>
+                                <div class="col-5 text-light"><label for="">Total Credit </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{view.total_credit}}</p>
+                                  <p class="bold text-light">:{{jour.total_credit}}</p>
                                 </div>
                               </div>
                               <div class="row mt-2">
-                                <div class="col-5"><label for="">Difference </label></div>
+                                <div class="col-5 text-light"><label for="">Debit_Difference </label></div>
                                 <div class="col">
-                                  <p class="bold">:{{view.difference}}</p>
+                                  <p class="bold text-light">:{{jour.debit_difference}}</p>
+                                </div>
+                                <hr>
+                              </div>
+                              <div class="row mt-2">
+                                <div class="col-5 text-light"><label for="">Credit_Difference </label></div>
+                                <div class="col">
+                                  <p class="bold text-light">:{{jour.credit_difference}}</p>
                                 </div>
                                 <hr>
                               </div>
@@ -1438,9 +1451,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-Bk2IxCYIbW6l0/mD4YKs/wE6xxvCEjVyQVuRj2VuTKlf6Ayb6BjdrM6OtqLZiVNiGKcFtdNPxXEhR9Wx4sLh9g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <script>
-    function deleteComment(commentId, priceListId) {
+    function deleteComment(commentId,journalid) {
         if (confirm('Are you sure you want to delete this comment?')) {
-            window.location.href = `/delete_pricelist_comment/${commentId}/${priceListId}/`;
+            window.location.href = `/delete_journal_comment/${commentId}/${journalid}/`;
         }
     }
 </script>
@@ -1484,8 +1497,8 @@
         }
 
         function toggleStatus() {
-            const priceListId = {{ price_list.id }};
-            window.location.href = `/toggle_price_list_status/${priceListId}/`;
+            const journalid = {{ jour.id }};
+            window.location.href = `/toggle_jour_status/${journalid}/`;
         }
     </script>
 
