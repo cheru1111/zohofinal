@@ -6063,9 +6063,9 @@ def journal_overview(request, journal_id):
     
     if log_details.user_type=="Staff":
         dash_details = StaffDetails.objects.get(login_details=log_details)
-        journal = Journal.objects.filter(company=dash_details.company)
+        journal = Journal.objects.filter(staff=dash_details)
         jour = get_object_or_404(Journal, id=journal_id)
-        journal_entries = JournalEntry.objects.filter(journal__in=journal,staff=dash_details)
+        journal_entries = JournalEntry.objects.filter(journal=jour)
         #comments = PriceListComment.objects.filter(price_list=price_list)
         allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
         sort_option = request.GET.get('sort', 'all')  
@@ -6104,7 +6104,44 @@ def update_journal_status(request,id):
     return redirect('journal_overview', id)
 
 
-
+def delete_journal(request, journal_id):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+        else:
+            return redirect('/')
+    log_details= LoginDetails.objects.get(id=log_id)
+    if log_details.user_type=="Company":
+        dash_details = CompanyDetails.objects.get(login_details=log_details)
+        
+        journal = Journal.objects.filter(company=dash_details)
+        jour = get_object_or_404(Journal, id=journal_id)
+        journal_entries = JournalEntry.objects.filter(journal=jour)
+        allmodules= ZohoModules.objects.get(company=dash_details,status='New')
+        jour.delete()
+        context={
+            'details':dash_details,
+            'allmodules': allmodules,
+            'journal': journal,
+            'jour': jour,
+            'journal_entries':journal_entries,
+        }
+        return render(request,'zohomodules/manual_journal/manual_journal.html',context)
+    if log_details.user_type=="Staff":
+        dash_details = StaffDetails.objects.get(login_details=log_details)
+        journal = Journal.objects.filter(staff=dash_details)
+        jour = get_object_or_404(Journal, id=journal_id)
+        journal_entries = JournalEntry.objects.filter(journal=jour)
+        allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
+        jour.delete()
+        context={
+            'details':dash_details,
+            'allmodules': allmodules,
+            'journal': journal,
+            'jour': jour,
+            'journal_entries':journal_entries,
+        }
+        return render(request,'zohomodules/manual_journal/manual_journal.html',context)
 
 
 

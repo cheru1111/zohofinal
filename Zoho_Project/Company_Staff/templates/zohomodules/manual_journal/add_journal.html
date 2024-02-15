@@ -8,169 +8,169 @@
 
 <link rel="stylesheet" href="path/to/bootstrap.min.css">
 <link rel="stylesheet" href="path/to/bootstrap-select.min.css">
-    <style>
+<style>
    
-        .custom-form {
-            max-width: 900px;
-            margin: 0 auto;
-            margin-top: 5rem;
-        }
-    
-      .modal{
-        z-index: 9999;
-        overflow: scroll;
-      }
-    tr:hover{
-      background-color: #8f8e8e2a;
-      font-weight: bold;
-    
+    .custom-form {
+        max-width: 900px;
+        margin: 0 auto;
+        margin-top: 5rem;
     }
+
+  .modal{
+    z-index: 9999;
+    overflow: scroll;
+  }
+tr:hover{
+  background-color: #8f8e8e2a;
+  font-weight: bold;
+
+}
+ 
+</style>
+<style>
+  /*.modal {
+    z-index: 9999;
+    overflow: scroll;
+  }*/
+
+  a {
+      color: rgb(248, 247, 246);
+  }
+
+  a:hover {
+      color: rgb(214, 141, 5);
+  }
+
+  tr:hover {
+      background-color: #92929242;
+      font-weight: bold;
+  }
+
+  /* width */
+  /*::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  /*::-webkit-scrollbar-track {
+    background: rgb(252, 236, 217);
+
+  }
+
+  /* Handle */
+  /*::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  /*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }*/
+
+  /*#selected-area {
+    font-size: 20px;
+  }
+
+
+
+  /* .......................................... search box1.............. */
+  .select-box1 {
+      position: relative;
+  }
+
+  .select-option1 {
+      position: relative;
+  }
+
+  .select-option1 input {
+      width: 100%;
+      cursor: pointer;
+      background-color: white;
+      color: black;
+      border-radius: 7px;
+      padding: 10px 15px;
+      border: 0 !important;
+      outline: 0 !important;
+  }
+
+  .select-option1:after {
+      content: "";
+      border-top: 12px solid #000;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      margin-top: -8px;
+
+  }
+
+  .content1 {
+      background-color: white;
+      position: absolute;
+      color: black;
+      border-radius: 7px;
+      margin-top: 15px;
+      width: 100%;
+      z-index: 999;
+      padding: 20px;
+      display: none;
+  }
+
+  .search1 input {
+      width: 100%;
+      font-size: 17px;
+      padding: 15px;
+      outline: 0;
+      border: 1px solid #b3b3b3;
+      border-radius: 5px;
+  }
+
+  .options1 {
+      margin-top: 10px;
+      max-height: 150px;
+      overflow-y: scroll;
+      padding: 0;
+  }
+
+  /* .options1::-webkit-scrollbar{
+      width: 5px;
      
-    </style>
-    <style>
-      /*.modal {
-        z-index: 9999;
-        overflow: scroll;
-      }*/
-    
-      a {
-          color: rgb(248, 247, 246);
-      }
-    
-      a:hover {
-          color: rgb(214, 141, 5);
-      }
-    
-      tr:hover {
-          background-color: #92929242;
-          font-weight: bold;
-      }
-    
-      /* width */
-      /*::-webkit-scrollbar {
-        width: 10px;
-      }
-    
-      /* Track */
-      /*::-webkit-scrollbar-track {
-        background: rgb(252, 236, 217);
-    
-      }
-    
-      /* Handle */
-      /*::-webkit-scrollbar-thumb {
-        background: #888;
-      }
-    
-      /* Handle on hover */
-      /*::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }*/
-    
-      /*#selected-area {
-        font-size: 20px;
-      }
-    
-    
-    
-      /* .......................................... search box1.............. */
-      .select-box1 {
-          position: relative;
-      }
-    
-      .select-option1 {
-          position: relative;
-      }
-    
-      .select-option1 input {
-          width: 100%;
-          cursor: pointer;
-          background-color: white;
-          color: black;
-          border-radius: 7px;
-          padding: 10px 15px;
-          border: 0 !important;
-          outline: 0 !important;
-      }
-    
-      .select-option1:after {
-          content: "";
-          border-top: 12px solid #000;
-          border-left: 8px solid transparent;
-          border-right: 8px solid transparent;
-          position: absolute;
-          right: 15px;
-          top: 50%;
-          margin-top: -8px;
-    
-      }
-    
-      .content1 {
-          background-color: white;
-          position: absolute;
-          color: black;
-          border-radius: 7px;
-          margin-top: 15px;
-          width: 100%;
-          z-index: 999;
-          padding: 20px;
-          display: none;
-      }
-    
-      .search1 input {
-          width: 100%;
-          font-size: 17px;
-          padding: 15px;
-          outline: 0;
-          border: 1px solid #b3b3b3;
-          border-radius: 5px;
-      }
-    
-      .options1 {
-          margin-top: 10px;
-          max-height: 150px;
-          overflow-y: scroll;
-          padding: 0;
-      }
-    
-      /* .options1::-webkit-scrollbar{
-          width: 5px;
-         
-        } */
-      .options1 li {
-          padding: 10px 15px;
-          border-radius: 5px;
-          cursor: pointer;
-          border-bottom: 1px solid gray;
-      }
-    
-      .select-box1.active .content1 {
-          display: block;
-      }
-    
-      .select-box1.active .select-option1:after {
-          transform: rotate(-180deg);
-      }
-    </style>
-    <style>
-      .drop_hovers{
-        background-color: transparent;
-       }
-       .drop_hovers:hover
-       {
-          background-color: rgb(0, 149, 255);
-          color: rgb(255, 255, 255);
-       }
-       ::-webkit-scrollbar{
-        display: none;
-       }
-       #custom_dropdowns{
-        display: none;
-       }
-       #custom_dropdown1{
-        display: none;
-       }
-      </style>
+    } */
+  .options1 li {
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      border-bottom: 1px solid gray;
+  }
+
+  .select-box1.active .content1 {
+      display: block;
+  }
+
+  .select-box1.active .select-option1:after {
+      transform: rotate(-180deg);
+  }
+</style>
+<style>
+  .drop_hovers{
+    background-color: transparent;
+   }
+   .drop_hovers:hover
+   {
+      background-color: rgb(0, 149, 255);
+      color: rgb(255, 255, 255);
+   }
+   ::-webkit-scrollbar{
+    display: none;
+   }
+   #custom_dropdowns{
+    display: none;
+   }
+   #custom_dropdown1{
+    display: none;
+   }
+  </style>
     <body>
         <div class="body-wrapper">
             <div class="container-fluid">
@@ -265,7 +265,7 @@
                                     <!-- <th>Select Account</th> -->
                                     <!-- data-target="#newaccount" -->
                                     <th style="color:white;">Select Account<a href="" data-toggle="modal" data-target="#create_account" style="text-decoration: none;">
-                                      <i class="fa fa-plus btn-sm" style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
+                                        <i class="fa fa-plus btn-sm" style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
                                     <th style="color:white;">Description</th>
                                     <th style="color:white;">Contact (INR)</th>
                                     <th style="color:white;">Debits</th>
@@ -561,20 +561,21 @@
                 </div>
             </div>
         </div>
+        <!-- <div class="modal fade" id="newaccount"> -->
         <div class="modal fade" id="create_account">
             <div class="modal-dialog modal-xl">
-              <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+            <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
                 <div class="modal-header " style="background: rgb(32, 35, 37);">
-                  <h3 class="m-3 text-uppercase">New Account</h3>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h3 class="m-3 text-uppercase">New Account</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                  </button>
+                </button>
                 </div>
                 <div class="modal-body" style="background: rgb(32, 35, 37);">
-                  <div class="card p-3 m-3">
-                    <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalAccount">
+                <div class="card p-3 m-3">
+                    <form action="{% url 'create_account_view'%}" method="post" class="needs-validation" novalidate autocomplete="off" id="modalAccount">
                         {% csrf_token%}
-                      <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
                         <h5 style="font-size: 25px;">Create Account</h5>
                         <div style="width: 3px;"></div>
                         
