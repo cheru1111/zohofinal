@@ -5900,6 +5900,13 @@ def add_journal(request):
                 company=dash_details  
             )
             journal.save()
+            
+            JournalTransactionHistory.objects.create(
+                company=dash_details,
+                login_details=log_details,
+                journal=journal,
+                action='Created',
+            )
                     
             account_list = request.POST.getlist('account')
             description_list = request.POST.getlist('description')
@@ -5968,6 +5975,14 @@ def add_journal(request):
                 staff=company_details 
             )
             journal.save()
+            
+            JournalTransactionHistory.objects.create(
+                staff=company_details,
+                login_details=log_details,
+                journal=journal,
+                action='Created',
+            )
+            
                 
             account_list = request.POST.getlist('account')
             description_list = request.POST.getlist('description')
@@ -6012,6 +6027,8 @@ def add_journal(request):
 
     return render(request, 'zohomodules/manual_journal/add_journal.html',{'dash_details':dash_details,'companydetails':company_details})
 
+
+
 def journal_overview(request, journal_id):
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):
@@ -6027,7 +6044,7 @@ def journal_overview(request, journal_id):
         #journal_entries = JournalEntry.objects.filter(journal__in=journal,company=dash_details)
         journal_entries = JournalEntry.objects.filter(journal=jour)
         
-        #comments = PriceListComment.objects.filter(price_list=price_list)
+        comments = JournalComment.objects.filter(journal=journal)
         allmodules= ZohoModules.objects.get(company=dash_details,status='New')
         sort_option = request.GET.get('sort', 'all')  
         filter_option = request.GET.get('filter', 'all')
@@ -6040,9 +6057,9 @@ def journal_overview(request, journal_id):
             journal = journal.filter(status='save')
         elif filter_option == 'draft':
             journal = journal.filter(status='draft')
-        #transaction_history = PriceListTransactionHistory.objects.filter(price_list=price_list)
+        transaction_history = JournalTransactionHistory.objects.filter(journal=jour)
         #items = PriceListItem.objects.filter(company=dash_details, price_list=price_list)
-        #latest_transaction = PriceListTransactionHistory.objects.filter(price_list=price_list)
+        latest_transaction =JournalTransactionHistory.objects.filter(journal=jour)
 
         context={
             'log_id':log_id,
@@ -6052,11 +6069,11 @@ def journal_overview(request, journal_id):
             'journal': journal,
             'jour': jour,
             'journal_entries':journal_entries,
-            #'comments': comments,
+            'comments': comments,
             'sort_option': sort_option,
             'filter_option': filter_option,
-            #'latest_transaction': latest_transaction,
-            #'transaction_history': transaction_history,
+            'latest_transaction': latest_transaction,
+            'transaction_history': transaction_history,
             #'items':items,
         }
         return render(request,'zohomodules/manual_journal/journal_list.html',context)
@@ -6066,7 +6083,7 @@ def journal_overview(request, journal_id):
         journal = Journal.objects.filter(staff=dash_details)
         jour = get_object_or_404(Journal, id=journal_id)
         journal_entries = JournalEntry.objects.filter(journal=jour)
-        #comments = PriceListComment.objects.filter(price_list=price_list)
+        comments = JournalComment.objects.filter(journal=jour)
         allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
         sort_option = request.GET.get('sort', 'all')  
         filter_option = request.GET.get('filter', 'all')
@@ -6079,7 +6096,7 @@ def journal_overview(request, journal_id):
             journal = journal.filter(status='save')
         elif filter_option == 'draft':
             journal = journal.filter(status='draft')
-        #transaction_history = PriceListTransactionHistory.objects.filter(price_list=price_list)
+        transaction_history = JournalTransactionHistory.objects.filter(journal__in=journal_entries)
         #items = PriceListItem.objects.filter(company=dash_details.company, price_list=price_list)
         context={
             'log_id':log_id,
@@ -6087,15 +6104,18 @@ def journal_overview(request, journal_id):
             'details':dash_details,
             'allmodules': allmodules,
             'journal': journal,
-            #'comments': comments,
+            'comments': comments,
             'jour': jour,
             'journal_entries':journal_entries,
             'sort_option': sort_option,
             'filter_option': filter_option,
-            #'transaction_history': transaction_history,
+            'transaction_history': transaction_history,
             #'items':items,
         }
         return render(request,'zohomodules/manual_journal/journal_list.html',context)
+    
+    
+    
 
 def update_journal_status(request,id):
     jo=Journal.objects.get(id=id)
@@ -6144,7 +6164,43 @@ def delete_journal(request, journal_id):
         return render(request,'zohomodules/manual_journal/manual_journal.html',context)
 
 
+def add_journal_comment(request, journal_id):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+        else:
+            return redirect('/')
+    log_details = LoginDetails.objects.get(id=log_id)
+    if log_details.user_type == "Company":
+        dash_details = CompanyDetails.objects.get(login_details=log_details)
+        journal = get_object_or_404(Journal, id=journal_id, company=dash_details)
+        if request.method == 'POST':
+            comment = request.POST.get('comment_text')
+            JournalComment.objects.create(
+                company=dash_details,
+                login_details=log_details,
+                journal=journal,
+                comment=comment
+            )
+            
+        return redirect('journal_overview', journal_id=journal_id)
+    if log_details.user_type == "Staff":
+        dash_details = StaffDetails.objects.get(login_details=log_details)
+        journal = get_object_or_404(Journal, id=journal_id, company=dash_details.company)
+        if request.method == 'POST':
+            comment = request.POST.get('comment_text')
+            JournalComment.objects.create(
+                company=dash_details.company,
+                login_details=log_details,
+                journal=journal,
+                comment=comment
+            )
+        return redirect('journal_overview', journal_id=journal_id)
 
+def delete_journal_comment(request, comment_id, journal_id):
+    comment = get_object_or_404(JournalComment, id=comment_id)
+    comment.delete()
+    return redirect('journal_overview', journal_id=journal_id)
 
 
 

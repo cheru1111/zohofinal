@@ -484,10 +484,24 @@ class JournalTransactionHistory(models.Model):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE)
     login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE)
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
-    journal= models.ForeignKey(JournalEntry, on_delete=models.CASCADE)
-    date = models.DateField(auto_now_add=True,null=True)
+    journal = models.ForeignKey(JournalEntry, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True, null=True)
     action_choices = [
         ('Created', 'Created'), 
         ('Edited', 'Edited')
-        ]
-    action = models.CharField(max_length=10, choices=action_choices,null=True)    
+    ]
+    action = models.CharField(max_length=10, choices=action_choices, null=True)
+
+
+    
+    
+class JournalComment(models.Model):
+    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE)
+    login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE)
+    journal = models.ForeignKey(Journal, on_delete=models.CASCADE)
+    comment = models.TextField()
+    date_added = models.DateField(auto_now_add=True)  
+    
+    
+    
+     
