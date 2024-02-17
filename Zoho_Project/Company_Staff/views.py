@@ -30,7 +30,10 @@ from django.urls import reverse
 from django.shortcuts import render,redirect,get_object_or_404
 from . models import *
 from decimal import Decimal
-from .models import Journal, JournalEntry, LoginDetails, CompanyDetails, StaffDetails
+from .models import Journal, JournalEntry, LoginDetails, CompanyDetails, StaffDetails,JournalTransactionHistory,JournalComment
+import openpyxl
+from openpyxl import Workbook, load_workbook
+import datetime
 
 # Create your views here.
 
@@ -5593,7 +5596,95 @@ def manual_journal(request):
         
         return render(request,'zohomodules/manual_journal/manual_journal.html',context)
 
+
 def import_journal_list(request):
+    if request.method == 'POST' and 'Journal' in request.FILES:
+        try:
+            excel_file = request.FILES['Journal']
+            workbook = openpyxl.load_workbook(excel_file)
+            sheet = workbook.active
+
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if len(row) >= 2:  # Ensure there are at least two values in the row
+                    # Extract values from the row
+                    year, month, *_ = row[:2]  # Assuming year and month are the first two columns
+                    journal_no, reference_no, notes, currency, journal_type, *_ = row[2:]  # Assuming other data follows
+
+                    # Convert year and month to integers
+                    year = int(year)
+                    month = int(month)
+
+                    # Convert other data types as needed
+                    # For example, if journal_no is a string, you can keep it as is
+
+                    # Create a new journal entry for each imported salary detail
+                    journal = Journal.objects.create(
+                        date=datetime.date(year, month, 1),  # Assuming you want the first day of the month
+                        journal_no=journal_no,
+                        reference_no=reference_no,
+                        notes=notes,
+                        currency=currency,
+                        journal_type=journal_type,
+                        total_debit=None,
+                        total_credit=None,
+                        debit_difference=None,
+                        credit_difference=None,
+                        status='save',
+                    )
+
+                    # Create a journal entry for salary detail
+                    JournalEntry.objects.create(
+                        journal=journal,
+                        account='Salary Account',
+                        description='Salary for {} {}'.format(month, year),
+                        debits=None,
+                        credits=None,
+                    )
+                else:
+                    return HttpResponse("Invalid row format: {}".format(row))
+
+            return redirect('manual_journal')
+        except Exception as e:
+            return HttpResponse("An error occurred while processing the file: {}".format(str(e)))
+    else:
+        return HttpResponse("No file uploaded or invalid request method")
+
+
+'''def ImportJournalDetails(request):
+    if request.method == 'POST' and 'empfile' in request.FILES:
+        excel_file = request.FILES['empfile']
+        workbook = openpyxl.load_workbook(excel_file)
+        sheet = workbook.active
+
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            emp_number,year, month = row
+            employee=payroll_employee.objects.get(emp_number=emp_number)
+            # salary_date = datetime.strptime(salary_date, '%Y-%m-%d').date()
+            #attendance = Attendance.objects.get(employee=employee)
+            SalaryDetails.objects.create(
+           
+                year=year,
+                employee=employee,
+                month=month,
+                attendance=attendance,
+                casual_leave=None,   
+                description=None,   
+                add_bonus=None,  
+                salary=None,   
+                other_cuttings=None,  
+                basic_salary=None,   
+                conveyance_allowance=None, 
+                hra=None,  
+                other_allowance=None,   
+            )
+
+        return redirect('SalaryDetailsListPage')
+
+    return HttpResponse("No file uploaded or invalid request method")'''
+
+
+
+'''def import_journal_list(request):
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):
             log_id = request.session['login_id']
@@ -5609,9 +5700,9 @@ def import_journal_list(request):
         print("b")
         print(dash_details)
 
-        if request.method == 'POST' and request.FILES.get('journal_list') and request.FILES.get('account'):
+        if request.method == 'POST' and request.FILES.get('journal_list'):
             journal_list = request.FILES['journal_list']
-            account_file = request.FILES['account']
+            #account_file = request.FILES['account']
 
             try:
                 # Read PriceList Excel file(journal_list)
@@ -5625,7 +5716,7 @@ def import_journal_list(request):
                         messages.error(request, f'Error importing data: Journal with journal_no "{row["JOURNAL"]}" already exists.')
                         continue
 
-                    new_journal_list = JournalEntry.objects.create(
+                    new_journal_list = Journal.objects.create(
                         date=row['DATE'],
                         journal_no=row['JOURNAL'],
                         reference_no=row['REFERENCE'], 
@@ -5645,27 +5736,27 @@ def import_journal_list(request):
                         action='Created',
                     )
 
-                    # Read Items Excel file(items_file) for each PriceList
-                    account_df = pd.read_excel(account_file)
-                    for account_index, account_row in account_df.iterrows():
-                        account = Chart_of_Accounts.objects.filter(account_name=account_row['ACCOUNT_NAME'], company=dash_details, activation_tag='active').first()
-                        if item:
-                            standard_rate = item.selling_price if new_price_list.type == 'Sales' else item.purchase_price
-                            custom_rate1 = item_row.get('SELLING_CUSTOM_RATE') if new_price_list.type == 'Sales' else item_row.get('PURCHASE_CUSTOM_RATE')
-                            custom_rate = standard_rate if new_price_list.item_rate_type == 'Percentage' else custom_rate1
-                            if custom_rate is None or math.isnan(custom_rate) or custom_rate == '':
-                                custom_rate = Decimal(standard_rate)
+                    #Read Items Excel file(items_file) for each PriceList
+                    #account_df = pd.read_excel(account_file)
+                    #for account_index, account_row in account_df.iterrows():
+                    #    account = Chart_of_Accounts.objects.filter(account_name=account_row['ACCOUNT_NAME'], company=dash_details, activation_tag='active').first()
+                    #    if item:
+                    #        standard_rate = item.selling_price if new_price_list.type == 'Sales' else item.purchase_price
+                    #        custom_rate1 = item_row.get('SELLING_CUSTOM_RATE') if new_price_list.type == 'Sales' else item_row.get('PURCHASE_CUSTOM_RATE')
+                    #        custom_rate = standard_rate if new_price_list.item_rate_type == 'Percentage' else custom_rate1
+                    #        if custom_rate is None or math.isnan(custom_rate) or custom_rate == '':
+                    #            custom_rate = Decimal(standard_rate)
                             
-                            PriceListItem.objects.create(
-                                company=dash_details,
-                                login_details=log_details,
-                                price_list=new_price_list,
-                                item=item,
-                                standard_rate=standard_rate,
-                                custom_rate=custom_rate,
-                            )
-                        else:
-                            messages.warning(request, f'Skipping item "{item_row["ITEM_NAME"]}" in PriceList "{row["NAME"]}": Item is not active.')
+                    #        PriceListItem.objects.create(
+                    #            company=dash_details,
+                    #            login_details=log_details,
+                    #            price_list=new_price_list,
+                    #            item=item,
+                    #            standard_rate=standard_rate,
+                    #            custom_rate=custom_rate,
+                    #        )
+                    #    else:
+                    #        messages.warning(request, f'Skipping item "{item_row["ITEM_NAME"]}" in PriceList "{row["NAME"]}": Item is not active.')
 
                 messages.success(request, 'Journal data imported successfully.')
                 return redirect('manual_journal')
@@ -5743,7 +5834,7 @@ def import_journal_list(request):
     else:
         return redirect('/')
 
-    return redirect('manual_journal')
+    return redirect('manual_journal')'''
 
 
 
@@ -5863,7 +5954,61 @@ def check_journal_num_valid(request):
 def journal(request):
     return render(request,'zohomodules/manual_journal/add_journal.html')
 
+'''def newestimate(request):
+        user = request.user
+        company = company_details.objects.get(user=user)
+        cmp1=company.id
+        items = AddItem.objects.filter(user_id=user.id,satus='active')
+        customers = customer.objects.filter(user_id=user.id,status='active')
+        unit=Unit.objects.all()
+        sales=Sales.objects.all()
+        purchase=Purchase.objects.all()
+        payments = payment_terms.objects.filter(user=user)
+        # print("helloooooooooooooooooooooooooo")
+        if Estimates.objects.filter(company = cmp1).exists():
+            latest_bill = Estimates.objects.filter(company = cmp1).order_by('-reference').first()
+            # print(latest_bill.estimate_no+1)
+            est_last=latest_bill.estimate_no
+            last_digit_index=len(est_last)
+            for i in range(len(est_last)-1,-1,-1):
+                if not est_last[i].isdigit():
+                    last_digit_index=i+1
+                    break
 
+            prefix=est_last[:last_digit_index]
+            number=int(est_last[last_digit_index:])
+            number+=1
+            enumber=str(number).zfill(3)
+            next_estimate_number=f"{prefix}{enumber}"
+            print(next_estimate_number)
+
+            # latest_bill = Estimates.objects.filter(company = cmp1).values_list('reference',flat=True).last()
+            # print("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii") 
+            if latest_bill:
+                    print("ssssssssssssssssssssssssssssssssssssssss") 
+                    last_number = int(latest_bill.reference)
+                    print(last_number)
+                    new_number = last_number + 1
+                    print(new_number)
+        else:
+                new_number = 1
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") 
+        if deletedestimates.objects.filter(cid = cmp1).exists():
+                deleted = deletedestimates.objects.get(cid = cmp1)
+                if deleted:
+                    while int(deleted.reference_number) >= new_number:
+                        new_number+=1
+        print("helloooooooooooooooooooooooooo")
+        # Pass stock information for each item to the template
+        item_stock = {item.Name: item.stock for item in items}
+        if Estimates.objects.filter(reference=1).exists():
+                est_obj=Estimates.objects.get(reference=1)
+                est_no=est_obj.estimate_no
+                context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments,'est_no':est_no,'next_estimate_number':next_estimate_number,'est_last':est_last,'item_stock': item_stock}
+                return render(request,'new_estimate.html',context)
+        else:
+                context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments,'next_estimate_number':next_estimate_number,'est_last':est_last,'item_stock': item_stock}
+                return render(request,'new_estimate.html',context)'''
 
 def add_journal(request):
     if 'login_id' in request.session:
@@ -5897,12 +6042,12 @@ def add_journal(request):
                 journal_type=cash_journal,
                 attachment=attachment, 
                 status=status,
-                company=dash_details  
+                company=dash_details if log_details.user_type == "Company" else None  
             )
             journal.save()
             
             JournalTransactionHistory.objects.create(
-                company=dash_details,
+                company=dash_details  if log_details.user_type == "Company" else None,
                 login_details=log_details,
                 journal=journal,
                 action='Created',
@@ -5972,12 +6117,12 @@ def add_journal(request):
                 journal_type=cash_journal,
                 attachment=attachment, 
                 status=status,
-                staff=company_details 
+                staff=company_details if log_details.user_type == 'Staff' else None 
             )
             journal.save()
             
             JournalTransactionHistory.objects.create(
-                staff=company_details,
+                staff=company_details if log_details.user_type == 'Staff' else None,
                 login_details=log_details,
                 journal=journal,
                 action='Created',
@@ -6044,7 +6189,7 @@ def journal_overview(request, journal_id):
         #journal_entries = JournalEntry.objects.filter(journal__in=journal,company=dash_details)
         journal_entries = JournalEntry.objects.filter(journal=jour)
         
-        comments = JournalComment.objects.filter(journal=journal)
+        comments = JournalComment.objects.filter(journal=jour)
         allmodules= ZohoModules.objects.get(company=dash_details,status='New')
         sort_option = request.GET.get('sort', 'all')  
         filter_option = request.GET.get('filter', 'all')
@@ -6096,7 +6241,7 @@ def journal_overview(request, journal_id):
             journal = journal.filter(status='save')
         elif filter_option == 'draft':
             journal = journal.filter(status='draft')
-        transaction_history = JournalTransactionHistory.objects.filter(journal__in=journal_entries)
+        transaction_history = JournalTransactionHistory.objects.filter(journal=jour)
         #items = PriceListItem.objects.filter(company=dash_details.company, price_list=price_list)
         context={
             'log_id':log_id,
@@ -6186,11 +6331,11 @@ def add_journal_comment(request, journal_id):
         return redirect('journal_overview', journal_id=journal_id)
     if log_details.user_type == "Staff":
         dash_details = StaffDetails.objects.get(login_details=log_details)
-        journal = get_object_or_404(Journal, id=journal_id, company=dash_details.company)
+        journal = get_object_or_404(Journal, id=journal_id, staff=dash_details)
         if request.method == 'POST':
             comment = request.POST.get('comment_text')
             JournalComment.objects.create(
-                company=dash_details.company,
+                staff=dash_details,
                 login_details=log_details,
                 journal=journal,
                 comment=comment

@@ -87,15 +87,15 @@
                                     <form action="{% url 'import_journal_list' %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="form-group">
-                                            <label for="price_list_file">Select journal File :</label>
-                                            <input type="file" name="price_list_file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                            <label for="Journal">Select journal File :</label>
+                                            <input type="file" name="Journal" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                         </div>
                                         <br>
-                                        <div class="form-group">
+                                        <!--<div class="form-group">
                                             <label for="items_file">Select account File :</label>
                                             <input type="file" name="items_file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                         </div>
-                                        <br>
+                                        <br>-->
                                         <button type="submit" class="btn btn-outline-warning">
                                             <i class="fa fa-file-import ms-1" style="color: #FFD43B;" aria-hidden="true"></i> Import
                                         </button>

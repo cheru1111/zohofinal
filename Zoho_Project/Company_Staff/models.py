@@ -481,10 +481,10 @@ class JournalEntry(models.Model):
     credits = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     
 class JournalTransactionHistory(models.Model):
-    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE)
-    login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE)
+    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+    login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE, null=True, blank=True)
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
-    journal = models.ForeignKey(JournalEntry, on_delete=models.CASCADE)
+    journal = models.ForeignKey(Journal, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True, null=True)
     action_choices = [
         ('Created', 'Created'), 
@@ -496,8 +496,9 @@ class JournalTransactionHistory(models.Model):
     
     
 class JournalComment(models.Model):
-    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE)
-    login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE)
+    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+    login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE, null=True, blank=True)
+    staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     journal = models.ForeignKey(Journal, on_delete=models.CASCADE)
     comment = models.TextField()
     date_added = models.DateField(auto_now_add=True)  
