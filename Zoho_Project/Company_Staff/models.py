@@ -439,6 +439,7 @@ class PriceListComment(models.Model):
 #-----------------------------------------MANUAL JOURNAL-----------------------------------
 
 class JournalRecievedIdModel(models.Model):
+    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
     pattern = models.CharField(max_length=255,null=True)
     ref_number = models.CharField(max_length=255,null=True)
     jn_rec_number = models.CharField(max_length=255,null=True)
@@ -479,6 +480,9 @@ class JournalEntry(models.Model):
     contact = models.CharField(max_length=200,null=True)
     debits = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     credits = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    
+    
+    
     
 class JournalTransactionHistory(models.Model):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
