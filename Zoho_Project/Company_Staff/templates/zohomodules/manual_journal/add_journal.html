@@ -232,7 +232,7 @@ tr:hover{
                                   <label for="reference_no">Reference No:</label>
                               </div>
                               <div class="col-md-6">
-                                  <input type="text"  {% if last %}value="{{ last.ref_number }}" placeholder="{{ last.ref_number }}"{% else %} value="01" placeholder="01" {% endif %} class="form-control form-control bg-light text-black" readonly>
+                                  <input type="text"  name="reference_no" {% if last %}value="{{ last.ref_number }}" placeholder="{{ last.ref_number }}"{% else %} value="01" placeholder="01" {% endif %} class="form-control form-control bg-light text-black" readonly>
                               </div>
                           </div>
                           

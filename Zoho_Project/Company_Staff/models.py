@@ -440,6 +440,7 @@ class PriceListComment(models.Model):
 
 class JournalRecievedIdModel(models.Model):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+    staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     pattern = models.CharField(max_length=255,null=True)
     ref_number = models.CharField(max_length=255,null=True)
     jn_rec_number = models.CharField(max_length=255,null=True)
@@ -452,6 +453,7 @@ class Journal(models.Model):
     )
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
+    login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField(null=True)
     journal_no = models.CharField(max_length=255,null=True)  
     reference_no = models.IntegerField(null=True)

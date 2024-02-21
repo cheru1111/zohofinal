@@ -5607,19 +5607,19 @@ def import_journal_list(request):
             for row in sheet.iter_rows(min_row=2, values_only=True):
                 if len(row) >= 2:  # Ensure there are at least two values in the row
                     # Extract values from the row
-                    year, month, *_ = row[:2]  # Assuming year and month are the first two columns
+                    #year, month, *_ = row[:2]  # Assuming year and month are the first two columns
                     journal_no, reference_no, notes, currency, journal_type, *_ = row[2:]  # Assuming other data follows
 
                     # Convert year and month to integers
-                    year = int(year)
-                    month = int(month)
+                    #year = int(year)
+                    #month = int(month)
 
                     # Convert other data types as needed
                     # For example, if journal_no is a string, you can keep it as is
 
                     # Create a new journal entry for each imported salary detail
                     journal = Journal.objects.create(
-                        date=datetime.date(year, month, 1),  # Assuming you want the first day of the month
+                        #date=datetime.date(year, month, 1),  # Assuming you want the first day of the month
                         journal_no=journal_no,
                         reference_no=reference_no,
                         notes=notes,
@@ -5632,7 +5632,7 @@ def import_journal_list(request):
                         status='save',
                     )
 
-                    # Create a journal entry for salary detail
+                    # Create a journal entry for journal
                     JournalEntry.objects.create(
                         journal=journal,
                         account='Salary Account',
@@ -5906,6 +5906,98 @@ def import_journal_list(request):
 
         return redirect('loan_accounts')'''
 
+def downloadJournalSampleImportFile(request):                                                                  #new by tinto mt
+    estimate_table_data = [['No.','ITEM TYPE','ITEM NAME','HSN','TAX REFERENCE','INTRASTATE TAX','INTERSTATE TAX','SELLING PRICE','SALES ACCOUNT','SALES DESCRIPTION','PURCHASE PRICE','PURCHASE ACCOUNT','PURCHASE DESCRIPTION','MINIMUM STOCK TO MAINTAIN','ACTIVATION TAG','OPENING STOCK','CURRENT STOCK','OPENING STOCK PER UNIT']]      
+    wb = Workbook()
+    sheet1 = wb.active
+    sheet1.title = 'Sheet1'
+    
+
+    # Populate the sheets with data
+    for row in estimate_table_data:
+        sheet1.append(row)  
+    
+    # Create a response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=expense_sample_file.xlsx'
+     # Save the workbook to the response
+    wb.save(response)
+    return response
+
+
+
+
+
+'''def import_journal_list(request):                                                                #new by tinto mt
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
+
+    if log_user.user_type == 'Company':
+        company_id = request.session['login_id']
+
+        if request.method == 'POST' and 'excel_file' in request.FILES:
+            company = CompanyDetails.objects.get(login_details=company_id)
+            excel_file = request.FILES.get('excel_file')
+            wb = load_workbook(excel_file)
+
+            try:
+                ws = wb["Sheet1"]
+                header_row = ws[1]
+                column_names = [cell.value for cell in header_row]
+                print("Column Names:", column_names)
+            except KeyError:
+                print('Sheet not found')
+                messages.error(request, '`Sheet1` not found in the Excel file. Please check.')
+                return redirect('expensepage')
+
+            expected_columns = ['No.', ]
+
+            if column_names != expected_columns:
+                print('Invalid sheet columns or order')
+                messages.error(request, 'Sheet column names or order is not in the required format. Please check.')
+                return redirect("comapny_items")
+
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                _, item_type, item_name, hsn, tax_reference, intrastate_tax, interstate_tax, selling_price, sales_account, \
+                sales_description, purchase_price, purchase_account, purchase_description, min_stock, activation_tag, \
+                opening_stock, current_stock, opening_stock_per_unit = row
+
+                # Fetching the 'Unit' instance with id=1 (you may adjust this based on your 'Unit' model)
+                unit_instance = Unit.objects.get(pk=1)
+
+                # Creating an instance of the 'Items' model and saving it
+                item = Items(
+                    login_details=log_user,
+                    company=company,
+                    unit=unit_instance,  # Use the fetched 'Unit' instance
+                    item_type=item_type,
+                    item_name=item_name,
+                    hsn_code=hsn,
+                    tax_reference=tax_reference,
+                    intrastate_tax=intrastate_tax,
+                    interstate_tax=interstate_tax,
+                    selling_price=selling_price,
+                    sales_account=sales_account,
+                    sales_description=sales_description,
+                    purchase_price=purchase_price,
+                    purchase_account=purchase_account,
+                    purchase_description=purchase_description,
+                    minimum_stock_to_maintain=min_stock,
+                    activation_tag=activation_tag,
+                    inventory_account="Inventory Account",
+                    opening_stock=opening_stock,
+                    opening_stock_per_unit=opening_stock_per_unit
+                )
+                item.save()
+
+            messages.success(request, 'Data imported successfully!')
+            return redirect("items_list")
+        else:
+            messages.error(request, 'Invalid request. Please check the file and try again.')
+            return redirect("items_list")
+    else:
+        messages.error(request, 'Invalid user type. Please check your user type.')
+        return redirect("items_list")'''
 
 
 
@@ -6023,7 +6115,7 @@ def add_journal(request):
 
         if log_details.user_type == "Company":
             dash_details = CompanyDetails.objects.get(login_details=log_details)
-            
+            allmodules = ZohoModules.objects.get(company=dash_details, status='New')
             journal_no = request.POST.get('journal_no')
             reference_no = ''
             jon = JournalRecievedIdModel.objects.filter(pattern__startswith=str(request.user.id))
@@ -6178,11 +6270,17 @@ def add_journal(request):
                     return redirect('add_journal')
                 else:
                     return redirect('manual_journal')
-            return render(request, 'zohomodules/manual_journal/add_journal.html',{'dash_details':dash_details,'reference_no': reference_no,
-                                             'last':last})
+            context = {
+                'dash_details': dash_details,
+                'allmodules': allmodules,
+                'reference_no': reference_no,
+                 'last':last,
+            }
+            return render(request, 'zohomodules/manual_journal/add_journal.html',context)
 
         elif log_details.user_type == 'Staff':
             company_details = StaffDetails.objects.get(login_details=log_details)
+            allmodules = ZohoModules.objects.get(company=company_details.company, status='New')
         
             journal_no = request.POST.get('journal_no')
             reference_no = ''
@@ -6338,9 +6436,15 @@ def add_journal(request):
                     return redirect('add_journal')
                 else:
                     return redirect('manual_journal')
+                
+            context = {
+                'companydetails':company_details,
+                'allmodules': allmodules,
+                'reference_no': reference_no,
+                 'last':last,
+            }
 
-    return render(request, 'zohomodules/manual_journal/add_journal.html',{'dash_details':dash_details,'companydetails':company_details,'reference_no': reference_no,
-                                             'last':last})
+    return render(request, 'zohomodules/manual_journal/add_journal.html',context)
 
 
 
