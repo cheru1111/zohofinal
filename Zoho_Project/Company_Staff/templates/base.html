@@ -516,7 +516,7 @@
                   
                   <div class="d-flex">
                     <p class="mb-0 fs-3">Manual Journal</p>
-                    <a href="{% url 'add_journal' %}"><i class="fa fa-plus text-white" ></i></a>
+                    <a href="{% url 'add_journal' staff_id=request.session.login_id %}"><i class="fa fa-plus text-white" ></i></a>
                   </div>
                   
                 </a>
