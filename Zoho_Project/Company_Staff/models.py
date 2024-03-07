@@ -27,15 +27,7 @@ class CompanyRepeatEvery(models.Model):
     duration =models.IntegerField(null=True,default=0)
     days =models.IntegerField(null=True,default=0)
 
-'''class LoginDetails(models.Model):
-    first_name = models.CharField(max_length=100,null=True,blank=True) 
-    last_name = models.CharField(max_length=100,null=True,blank=True) 
-    email = models.CharField(max_length=100,null=True,blank=True) 
-    username = models.CharField(max_length=100,null=True,blank=True) 
-    password = models.CharField(max_length=100,null=True,blank=True) 
-    user_type = models.CharField(max_length=100,null=True,blank=True) 
-    self_distributor = models.CharField(max_length=100,null=True,blank=True,default='self')
-    distributor_id = models.CharField(max_length=100,null=True,blank=True,default='')'''
+
     
 
 
@@ -94,6 +86,7 @@ class Items_comments(models.Model):
 # TINTO -----CHART OF ACCOUNNTS ----START
     
 class Chart_of_Accounts(models.Model):
+    staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
   
     account_type = models.CharField(max_length=255,null=True,blank=True)
     account_name = models.CharField(max_length=255,null=True,blank=True)
@@ -454,7 +447,7 @@ class Journal(models.Model):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE, null=True, blank=True)
-    date = models.DateField(null=True)
+    date = models.DateField(null=True,auto_now_add=True)
     journal_no = models.CharField(max_length=255,null=True)  
     reference_no = models.IntegerField(null=True)
     notes = models.TextField(blank=True,null=True)

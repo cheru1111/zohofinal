@@ -87,15 +87,15 @@
                                     <form action="{% url 'import_journal_list' %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="form-group">
-                                            <label for="Journal">Select journal File :</label>
-                                            <input type="file" name="Journal" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                            <label for="journalfile">Select journal File :</label>
+                                            <input type="file" name="journalfile" id="journalfile" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"required>
                                         </div>
                                         <br>
-                                        <!--<div class="form-group">
-                                            <label for="items_file">Select account File :</label>
-                                            <input type="file" name="items_file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                        <div class="form-group">
+                                            <label for="accountfile">Select account File :</label>
+                                            <input type="file" name="accountfile" id="accountfile" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"required>
                                         </div>
-                                        <br>-->
+                                        <br>
                                         <button type="submit" class="btn btn-outline-warning">
                                             <i class="fa fa-file-import ms-1" style="color: #FFD43B;" aria-hidden="true"></i> Import
                                         </button>
@@ -104,6 +104,38 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--<div class="modal" id="excelModal" tabindex="-1" role="dialog" aria-labelledby="excelModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="excelModalLabel">Upload File
+                                    <label for="" style="color: red; font-size: x-small;" >* Refer Downloaded Sheet For Format </label><br></h5>
+                                    <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="excelForm" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="file" style="color: black;">Choose Excel File for Purchase Bill- </label> <br>
+                                            <input type="file" class="form-control-file" id="billfile" name="billfile" accept=".xls, .xlsx"><br><br>
+                                            
+                
+                                            <label for="file" style="color: black;">Choose Excel File for Purchase Bill Products- </label> <br>
+                                            <input type="file" class="form-control-file" id="prdfile" name="prdfile" accept=".xls, .xlsx"><br>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="uploadFile()" data-dismiss="modal">Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
                     <!-- price lists table -->
                     <div class="table-responsive " style="overflow-x:auto;margin-top: 20px;">
                         <table id="table" class="table " >
