@@ -6321,7 +6321,290 @@ def delete_journal_comment(request, comment_id, journal_id):
     return redirect('journal_overview', journal_id=journal_id)
 
 
+def create_account_jour(request):                                                                #new by tinto mt
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
+    if log_user.user_type == 'Company':
+        company_id = request.session['login_id']
+        if request.method=='POST':
+            a=Chart_of_Accounts()
+            b=Chart_of_Accounts_History()
+            account=Chart_of_Accounts.objects.all()
+            c = CompanyDetails.objects.get(login_details=company_id)
+            b.company=c
+            b.logindetails=log_user
+            b.action="Created"
+            b.Date=date.today()
+            a.login_details=log_user
+            a.company=c
+          
+        
+            a.account_type = request.POST.get("account_type",None)
+            a.account_name = request.POST.get("account_name",None)
+            a.account_code = request.POST.get("account_code",None)
+            a.account_number = request.POST.get("account_number2",None)
+            a.account_description = request.POST['description']
+            if a.account_type=="Other Current Assets":
 
+                a.sub_account = request.POST.get("sub_account",None)
+                a.parent_account = request.POST.get("parent_account",None)
+               
+
+            if a.account_type=="Cash":
+             
+                a.sub_account = request.POST.get("sub_account22",None)
+                a.parent_account = request.POST.get("parent_account22",None)
+               
+
+            if a.account_type=="Fixed Assets":
+            
+                a.sub_account = request.POST.get("sub_account33",None)
+                a.parent_account = request.POST.get("parent_account33",None)
+               
+            
+            if a.account_type=="Stock":
+               
+                a.sub_account = request.POST.get("sub_account44",None)
+                a.parent_account = request.POST.get("parent_account44",None)
+             
+            
+            if a.account_type=="Other Current Liability":
+             
+                a.sub_account = request.POST.get("sub_account55",None)
+                a.parent_account = request.POST.get("parent_account55",None)
+               
+            if a.account_type=="Long Term Liability":
+            
+                a.sub_account = request.POST.get("sub_account66",None)
+                a.parent_account = request.POST.get("parent_account66",None)
+              
+            
+            if a.account_type=="Other Liability":
+              
+                a.sub_account = request.POST.get("sub_account77",None)
+                a.parent_account = request.POST.get("parent_account77",None)
+              
+            if a.account_type=="Equity":
+            
+                a.sub_account = request.POST.get("sub_account88",None)
+                a.parent_account = request.POST.get("parent_account88",None)
+            
+            
+            if a.account_type=="Income":
+             
+                a.sub_account = request.POST.get("sub_account99",None)
+                a.parent_account = request.POST.get("parent_account99",None)
+              
+            
+            if a.account_type=="Expense":
+             
+                a.sub_account = request.POST.get("sub_account100",None)
+                a.parent_account = request.POST.get("parent_account100",None)
+              
+            if a.account_type=="Cost Of Goods Sold":
+              
+                a.sub_account = request.POST.get("sub_account111",None)
+                a.parent_account = request.POST.get("parent_account111",None)
+             
+            if a.account_type=="Other Expense":
+             
+                a.sub_account = request.POST.get("sub_account222",None)
+                a.parent_account = request.POST.get("parent_account222",None)
+               
+            account_type=request.POST.get("account_type",None)
+            if account_type == 'Other Assets':
+                a.description = 'Track special assets like goodwill and other intangible assets'
+            if account_type == 'Other Current Assets':
+                a.description = 'Any short term asset that can be converted into cash or cash equivalents easily Prepaid expenses Stocks and Mutual Funds'
+            if account_type == 'Cash':
+                a.description = 'To keep track of cash and other cash equivalents like petty cash, undeposited funds, etc., use an organized accounting system  financial software'
+            if account_type == 'Bank':
+                a.description = 'To keep track of bank accounts like Savings, Checking, and Money Market accounts.'
+            if account_type == 'Fixed Asset':
+                a.description = 'Any long-term investment or asset that cannot be easily converted into cash includes: Land and Buildings, Plant, Machinery, and Equipment, Computers, Furniture.'
+            if account_type == 'Stock':
+                a.description = 'To keep track of your inventory assets.'
+            if account_type == 'Payment Clearing':
+                a.description = 'To keep track of funds moving in and out via payment processors like Stripe, PayPal, etc.'
+            if account_type == 'Other Liability':
+                a.description = 'Obligation of an entity arising from past transactions or events which would require repayment.Tax to be paid Loan to be Repaid Accounts Payableetc.'
+            if account_type == 'Other Current Liability':
+                a.description = 'Any short term liability like: Customer Deposits Tax Payable'
+            if account_type == 'Credit Card':
+                a.description = 'Create a trail of all your credit card transactions by creating a credit card account.'
+            if account_type == 'Long Term Liability':
+                a.description = 'Liabilities that mature after a minimum period of one year like: Notes Payable Debentures Long Term Loans '
+            if account_type == 'Overseas Tax Payable':
+                a.description = 'Track your taxes in this account if your business sells digital services to foreign customers.'
+            if account_type == 'Equity':
+                a.description = 'Owners or stakeholders interest on the assets of the business after deducting all the liabilities.'
+            if account_type == 'Income':
+                a.description = 'Income or Revenue earned from normal business activities like sale of goods and services to customers.'
+            if account_type == 'Other Income':
+                a.description = 'Income or revenue earned from activities not directly related to your business like : Interest Earned Dividend Earned'
+            if account_type == 'Expense':
+                a.description = 'Reflects expenses incurred for running normal business operations, such as : Advertisements and Marketing Business Travel Expenses License Fees Utility Expenses'
+            if account_type == 'Cost Of Goods Sold':
+                a.description = 'This indicates the direct costs attributable to the production of the goods sold by a company such as: Material and Labor costs Cost of obtaining raw materials'
+            if account_type == 'Other Expense':
+                a.description = 'Track miscellaneous expenses incurred for activities other than primary business operations or create additional accounts to track default expenses like insurance or contribution towards charity.'
+       
+
+            
+    
+            a.Create_status="active"
+            ac_name=request.POST.get("account_name",None)
+            if Chart_of_Accounts.objects.filter(account_name=ac_name,company=c).exists():
+                error='yes'
+                messages.error(request,'Account with same name exsits !!!')
+                return redirect('add_journal')
+            else:
+                a.save()
+                t=Chart_of_Accounts.objects.get(id=a.id)
+                b.chart_of_accounts=t
+                b.save()
+                return redirect('add_journal')
+    elif log_user.user_type == 'Staff':
+        staff_id = request.session['login_id']
+        if request.method=='POST':
+            a=Chart_of_Accounts()
+            b=Chart_of_Accounts_History()
+            staff = LoginDetails.objects.get(id=staff_id)
+            sf = StaffDetails.objects.get(login_details=staff)
+            c=sf.company
+            b.Date=date.today()
+            b.company=c
+            b.logindetails=log_user
+            a.login_details=log_user
+            a.company=c
+          
+        
+            a.account_type = request.POST.get("account_type",None)
+            a.account_name = request.POST.get("account_name",None)
+            a.account_code = request.POST.get("account_code",None)
+            a.account_number = request.POST.get("account_number2",None)
+            a.account_description = request.POST['description']
+            account_type=request.POST.get("account_type",None)
+            if a.account_type=="Other Current Assets":
+
+                a.sub_account = request.POST.get("sub_account",None)
+                a.parent_account = request.POST.get("parent_account",None)
+               
+
+            if a.account_type=="Cash":
+             
+                a.sub_account = request.POST.get("sub_account22",None)
+                a.parent_account = request.POST.get("parent_account22",None)
+               
+
+            if a.account_type=="Fixed Assets":
+            
+                a.sub_account = request.POST.get("sub_account33",None)
+                a.parent_account = request.POST.get("parent_account33",None)
+               
+            
+            if a.account_type=="Stock":
+               
+                a.sub_account = request.POST.get("sub_account44",None)
+                a.parent_account = request.POST.get("parent_account44",None)
+             
+            
+            if a.account_type=="Other Current Liability":
+             
+                a.sub_account = request.POST.get("sub_account55",None)
+                a.parent_account = request.POST.get("parent_account55",None)
+               
+            if a.account_type=="Long Term Liability":
+            
+                a.sub_account = request.POST.get("sub_account66",None)
+                a.parent_account = request.POST.get("parent_account66",None)
+              
+            
+            if a.account_type=="Other Liability":
+              
+                a.sub_account = request.POST.get("sub_account77",None)
+                a.parent_account = request.POST.get("parent_account77",None)
+              
+            if a.account_type=="Equity":
+            
+                a.sub_account = request.POST.get("sub_account88",None)
+                a.parent_account = request.POST.get("parent_account88",None)
+            
+            
+            if a.account_type=="Income":
+             
+                a.sub_account = request.POST.get("sub_account99",None)
+                a.parent_account = request.POST.get("parent_account99",None)
+              
+            
+            if a.account_type=="Expense":
+             
+                a.sub_account = request.POST.get("sub_account100",None)
+                a.parent_account = request.POST.get("parent_account100",None)
+              
+            if a.account_type=="Cost Of Goods Sold":
+              
+                a.sub_account = request.POST.get("sub_account111",None)
+                a.parent_account = request.POST.get("parent_account111",None)
+             
+            if a.account_type=="Other Expense":
+             
+                a.sub_account = request.POST.get("sub_account222",None)
+                a.parent_account = request.POST.get("parent_account222",None)
+               
+            account_type=request.POST.get("account_type",None)
+            if account_type == 'Other Assets':
+                a.description = 'Track special assets like goodwill and other intangible assets'
+            if account_type == 'Other Current Assets':
+                a.description = 'Any short term asset that can be converted into cash or cash equivalents easily Prepaid expenses Stocks and Mutual Funds'
+            if account_type == 'Cash':
+                a.description = 'To keep track of cash and other cash equivalents like petty cash, undeposited funds, etc., use an organized accounting system  financial software'
+            if account_type == 'Bank':
+                a.description = 'To keep track of bank accounts like Savings, Checking, and Money Market accounts.'
+            if account_type == 'Fixed Asset':
+                a.description = 'Any long-term investment or asset that cannot be easily converted into cash includes: Land and Buildings, Plant, Machinery, and Equipment, Computers, Furniture.'
+            if account_type == 'Stock':
+                a.description = 'To keep track of your inventory assets.'
+            if account_type == 'Payment Clearing':
+                a.description = 'To keep track of funds moving in and out via payment processors like Stripe, PayPal, etc.'
+            if account_type == 'Other Liability':
+                a.description = 'Obligation of an entity arising from past transactions or events which would require repayment.Tax to be paid Loan to be Repaid Accounts Payableetc.'
+            if account_type == 'Other Current Liability':
+                a.description = 'Any short term liability like: Customer Deposits Tax Payable'
+            if account_type == 'Credit Card':
+                a.description = 'Create a trail of all your credit card transactions by creating a credit card account.'
+            if account_type == 'Long Term Liability':
+                a.description = 'Liabilities that mature after a minimum period of one year like: Notes Payable Debentures Long Term Loans '
+            if account_type == 'Overseas Tax Payable':
+                a.description = 'Track your taxes in this account if your business sells digital services to foreign customers.'
+            if account_type == 'Equity':
+                a.description = 'Owners or stakeholders interest on the assets of the business after deducting all the liabilities.'
+            if account_type == 'Income':
+                a.description = 'Income or Revenue earned from normal business activities like sale of goods and services to customers.'
+            if account_type == 'Other Income':
+                a.description = 'Income or revenue earned from activities not directly related to your business like : Interest Earned Dividend Earned'
+            if account_type == 'Expense':
+                a.description = 'Reflects expenses incurred for running normal business operations, such as : Advertisements and Marketing Business Travel Expenses License Fees Utility Expenses'
+            if account_type == 'Cost Of Goods Sold':
+                a.description = 'This indicates the direct costs attributable to the production of the goods sold by a company such as: Material and Labor costs Cost of obtaining raw materials'
+            if account_type == 'Other Expense':
+                a.description = 'Track miscellaneous expenses incurred for activities other than primary business operations or create additional accounts to track default expenses like insurance or contribution towards charity.'
+       
+    
+            a.Create_status="active"
+            ac_name=request.POST.get("account_name",None)
+            if Chart_of_Accounts.objects.filter(account_name=ac_name,company=c).exists():
+                error='yes'
+                messages.error(request,'Account with same name exsits')
+                return redirect('add_journal')
+            else:
+                a.save()
+                t=Chart_of_Accounts.objects.get(id=a.id)
+                b.chart_of_accounts=t
+                b.save()
+                return redirect('add_journal')
+
+    return redirect('add_journal')
 
 
 
