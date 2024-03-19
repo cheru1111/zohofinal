@@ -159,6 +159,7 @@ urlpatterns = [
     path('add_journal_comment/<int:journal_id>/', views.add_journal_comment, name='add_journal_comment'),
     path('delete_journal_comment/<int:comment_id>/<int:journal_id>/', views.delete_journal_comment, name='delete_journal_comment'),
     path('create_account_jour',views.create_account_jour,name='create_account_jour'),
+    path('edit_journal/<int:journal_id>/', views.edit_journal, name='edit_journal'),
     
     
   

@@ -453,7 +453,7 @@ class Journal(models.Model):
     notes = models.TextField(blank=True,null=True)
     currency = models.CharField(max_length=255,null=True)
     journal_type = models.CharField(max_length=255,null=True)
-    attachment = models.FileField(upload_to='attachments/', blank=True,null=True)
+    attachment = models.FileField(upload_to='journal_attachments/', blank=True,null=True)
     total_debit = models.DecimalField(max_digits=10, decimal_places=2, default=0,null=True)
     total_credit = models.DecimalField(max_digits=10, decimal_places=2, default=0,null=True)
     debit_difference = models.DecimalField(max_digits=10, decimal_places=2, default=0,null=True)

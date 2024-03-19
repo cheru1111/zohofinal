@@ -2,8 +2,9 @@
 {% block content %}
 {% load static %}
 {% load social_share %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"> 
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"> -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -18,6 +19,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
   integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wyj73RNMIpiD6bq5D2ZAdfPI4mM1iS6L4" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 <style>
   .modal {
@@ -43,7 +45,7 @@
 
   .slip-page[size="A4"] {
     width: 17cm;
-    height: 29.7cm;
+    height: 20.7cm;
     overflow: hidden;
   }
 
@@ -186,478 +188,499 @@
                     
                     
                     <!--------- overview right side -------------------->
-                    <div class="col-md-8 ml-0  mb-5 " id="overviewdiv">
-                        <div class="row">
-                          <div class="col-md-7">
-                            <a class="text-white" style="font-size: 1.5rem;">
-                              
-                            </a>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <a class="btn" style="background-color: chocolate; margin-right: 2vh;"><i class="fas fa-eye"></i>
-                              Overview</a>
-                            <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
-                              aria-haspopup="true" aria-expanded="false"
-                              style="background-color: white; color: black; margin-right: 2vh;"> Templates
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
-                              <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
-            
-                              <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
-                                Template 2</a>
-            
-                              <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
-                                Template 3</a>
-            
-            
-                            </div>
-            
-                          </div>
-            
-                          <div class="col-md-6" style="text-align: center;">
-                            {% if jour.status == "draft" %}
-                            <a href="{% url 'update_journal_status' jour.id %}" class="btn btn-outline-warning" title="Save">
-                              <i class="fa fa-save" aria-hidden="true"></i>
-                            </a>
-                            {% endif %}
-
-                            <!--<button id="toggleStatusButton" class="btn btn-outline-warning ms-2 " data-status="{{ jour.status }}" onclick="toggleStatus()">
-                              {% if jour.status == 'save' %}
-                              Save
-                              {% elif jour.status == 'draft' %}
-                              Draft
-                              {% endif %}
-                          </button>-->
-                            <a href="" class="text-dark">
-                              <button class="btn btn-outline-warning">
-                                <i class="fa fa-edit"></i>
-                              </button>
-                            </a>
+                    <div class="col-md-8 ml-1  mb-5 " id="overviewdiv">
+                      <div class="row">
+                        <div class="col-md-7">
+                          <a class="text-white" style="font-size: 1.5rem;">
                             
-                         
-                        <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
-                          <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                        </a>
-                        <!--
+                          </a>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <a class="btn" style="background-color: chocolate; margin-right: 2vh;"><i class="fas fa-eye"></i>
+                            Overview</a>
+                          <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            style="background-color: white; color: black; margin-right: 2vh;"> Templates
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                            <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
+          
+                            <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
+                              Template 2</a>
+          
+                            <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
+                              Template 3</a>
+
+
+          
+          
+                          </div>
+          
+                        </div>
+          
+                        <div class="col-md-6" style="text-align: center;">
+                          {% if jour.status == "draft" %}
+                          <a href="{% url 'update_journal_status' jour.id %}" class="btn btn-outline-warning" title="Save">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
+
+                          <!--<button id="toggleStatusButton" class="btn btn-outline-warning ms-2 " data-status="{{ jour.status }}" onclick="toggleStatus()">
+                            {% if jour.status == 'save' %}
+                            Save
+                            {% elif jour.status == 'draft' %}
+                            Draft
+                            {% endif %}
+                        </button>-->
+                          <a href="{% url 'edit_journal' jour.id %}" class="text-dark">
+                            <button class="btn btn-outline-warning">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                          </a>
+                          
+                       
+                      <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
+                        <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                      </a>
+                      <!--
+                      <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Upload" onclick="triggerFileInput()">
+                        <i class="mdi mdi-file-upload"></i>
+                    </a>
+                    
+                    <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Download Uploaded File" onclick="downloadUploadedFile()">
+                        <span class="mdi mdi-download"></span>
+                    </a>-->
+                    <a class="btn btn-outline-warning ms-2" data-toggle="modal" data-target="#addCommentModal"><i class="fa-regular fa-comment"></i></a>
+
+                    <a class="btn btn-outline-warning ms-2 " href="#" data-toggle="modal" data-target="#TransactionHistory"><i class="fa-solid fa-clock-rotate-left"></i></a>
+
+                      <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
+                          <i class="fa-solid fa-paperclip"></i>
+                      </button>
+                      <div class="dropdown-menu">
                         <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Upload" onclick="triggerFileInput()">
-                          <i class="mdi mdi-file-upload"></i>
+                          Attach File
                       </a>
                       
                       <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Download Uploaded File" onclick="downloadUploadedFile()">
-                          <span class="mdi mdi-download"></span>
-                      </a>-->
-                      <a class="btn btn-outline-warning ms-2" data-toggle="modal" data-target="#addCommentModal"><i class="fa-regular fa-comment"></i></a>
-
-                      <a class="btn btn-outline-warning ms-2 " href="#" data-toggle="modal" data-target="#TransactionHistory"><i class="fa-solid fa-clock-rotate-left"></i></a>
-
-                        <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-paperclip"></i>
-                        </button>
-                        <div class="dropdown-menu">
-                          <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Upload" onclick="triggerFileInput()">
-                            Attach File
-                        </a>
-                        
-                        <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Download Uploaded File" onclick="downloadUploadedFile()">
-                            Download file
-                        </a>
-                        </div>
+                          Download file
+                      </a>
+                      </div>
+                  
                     
+                    <!-- Input element for file selection -->
+                    <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(this.files)">
+                    
+                    <script>
+                        var uploadedFile = null;
+                    
+                        function triggerFileInput() {
+                            document.getElementById('fileInput').click();
+                        }
+                    
+                        function handleFileUpload(files) {
+                            if (files.length > 0) {
+                                // Assume the first file is the one to be uploaded
+                                uploadedFile = files[0];
+                                alert('File has been selected for upload.');
+                            }
+                        }
+                    
+                        function downloadUploadedFile() {
+                            if (uploadedFile) {
+                                // Assuming the file is an object URL created from a Blob
+                                var blob = uploadedFile; // No need to create a new Blob
+                                var url = window.URL.createObjectURL(blob);
+                    
+                                var a = document.createElement('a');
+                                a.href = url;
+                                a.download = uploadedFile.name; // Set the desired file name
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                    
+                                window.URL.revokeObjectURL(url);
+                            } else {
+                                alert('No file has been uploaded yet.');
+                            }
+                        }
+                    </script>
+                       
+                        </div>
+                      </div><br>
+
+          
+                      <div class="row" id="div-to-pdf"
+                      style="background-color: #ffddb0;  height: auto; margin-left:1px; margin-right: 1rem; ">
+        
+                      <div class="row text-center">
+                        <h2 style="color: #000000;"><br>MANUAL JOURNAL
+                          <hr>
+                        </h2>
+                      </div>
                       
-                      <!-- Input element for file selection -->
-                      <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(this.files)">
-                      
-                      <script>
-                          var uploadedFile = null;
-                      
-                          function triggerFileInput() {
-                              document.getElementById('fileInput').click();
-                          }
-                      
-                          function handleFileUpload(files) {
-                              if (files.length > 0) {
-                                  // Assume the first file is the one to be uploaded
-                                  uploadedFile = files[0];
-                                  alert('File has been selected for upload.');
-                              }
-                          }
-                      
-                          function downloadUploadedFile() {
-                              if (uploadedFile) {
-                                  // Assuming the file is an object URL created from a Blob
-                                  var blob = uploadedFile; // No need to create a new Blob
-                                  var url = window.URL.createObjectURL(blob);
-                      
-                                  var a = document.createElement('a');
-                                  a.href = url;
-                                  a.download = uploadedFile.name; // Set the desired file name
-                                  document.body.appendChild(a);
-                                  a.click();
-                                  document.body.removeChild(a);
-                      
-                                  window.URL.revokeObjectURL(url);
-                              } else {
-                                  alert('No file has been uploaded yet.');
-                              }
-                          }
-                      </script>
-                         
+                      <div class="gen-info col-6 " style="padding-left: 3rem; overflow-y: scroll; ">
+                        <div class="row mt-1">
+                          <div class="col-5"><label  for=""style="color: #000000;">Notes </label></div>
+                          <div class="col-7">
+                            <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.notes }}</p>
                           </div>
-                        </div><br>
-            
-                        <div class="row" id="div-to-pdf"
-                          style="background-color: #ffddb0;  height: auto; margin-left:1px; margin-right: 1rem; ">
-            
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-5"><label style="color: #000000;" for="">Reference no </label></div>
+                          
+                          <div class="col-7">
+                            <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.reference_no}}</p>
+                          </div>
+                          
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-5"><label style="color: #000000;" for="">Journal No</label></div>
+                          <div class="col-7">
+                            <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
+                              :{{jour.journal_no}}</p>
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-5"><label style="color: #000000;" for="">Date </label></div>
+                          <div class="col-7">
+                            <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
+                              :{{jour.date}}</p>
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-5"><label style="color: #000000;" for="">Amount </label></div>
+                          <div class="col-7">
+                            <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
+                              :{{jour.total_debit}}</p>
+                          </div>
+                        </div>
+                        
+                        
+                      </div>
+
+                        
+                      <div class="p-info col-6" style="height: 100%; margin-bottom: 1vh;">
+                        <div class="card" style="background-color: rgb(110, 61, 46); padding-left: 1rem; padding-top: 1rem;">
                           <div class="row text-center">
-                            <h2 style="color: #000000;"><br>MANUAL JOURNAL
-                              <hr>
+                            <h2 style="color:white;">INFORMATION
+                              
                             </h2>
                           </div>
-                          
-                          <div class="gen-info col-6 " style="padding-left: 3rem; overflow-y: scroll; ">
-                            <div class="row mt-1">
-                              <div class="col-5"><label  for=""style="color: #000000;">Notes </label></div>
-                              <div class="col-7">
-                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.notes }}</p>
-                              </div>
+                          {% for entry in journal_entries %}
+                          <hr>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Account Name </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{entry.account}}</p>
                             </div>
-                            <div class="row mt-3">
-                              <div class="col-5"><label style="color: #000000;" for="">Reference no </label></div>
-                              
-                              <div class="col-7">
-                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.reference_no}}</p>
-                              </div>
-                              
+                          </div>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Description </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{entry.description}}</p>
                             </div>
-                            <div class="row mt-3">
-                              <div class="col-5"><label style="color: #000000;" for="">Journal No</label></div>
-                              <div class="col-7">
-                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
-                                  :{{jour.journal_no}}</p>
-                              </div>
+                          </div>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Contact </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{entry.contact}}</p>
                             </div>
-                            <div class="row mt-3">
-                              <div class="col-5"><label style="color: #000000;" for="">Date </label></div>
-                              <div class="col-7">
-                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
-                                  :{{jour.date}}</p>
-                              </div>
+                          </div>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Credits </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{entry.credits}}</p>
                             </div>
-                            <div class="row mt-3">
-                              <div class="col-5"><label style="color: #000000;" for="">Amount </label></div>
-                              <div class="col-7">
-                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">
-                                  :{{jour.total_debit}}</p>
-                              </div>
+                          </div>
+        
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Debits</label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{entry.debits}}</p>
                             </div>
-                            
-                            
+                          </div>
+                          {% endfor %}
+                          <hr>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Total Debit </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{jour.total_debit}}</p>
+                            </div>
+                          </div>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Total Credit </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{jour.total_credit}}</p>
+                            </div>
+                          </div>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Debit_Difference </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{jour.debit_difference}}</p>
+                            </div>
+                            <hr>
+                          </div>
+                          <div class="row mt-2">
+                            <div class="col-5 text-light"><label for="">Credit_Difference </label></div>
+                            <div class="col">
+                              <p class="bold text-light">:{{jour.credit_difference}}</p>
+                            </div>
+                            <hr>
                           </div>
                           
-                          <div class="p-info col-6" style="height: 100%; margin-bottom: 1vh;">
-                            <div class="card" style="background-color: rgb(110, 61, 46); padding-left: 1rem; padding-top: 1rem;">
-                              <div class="row text-center">
-                                <h2 style="color:white;">INFORMATION
-                                  
-                                </h2>
-                              </div>
-                              {% for entry in journal_entries %}
-                              <hr>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Account Name </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{entry.account}}</p>
-                                </div>
-                              </div>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Description </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{entry.description}}</p>
-                                </div>
-                              </div>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Contact </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{entry.contact}}</p>
-                                </div>
-                              </div>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Credits </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{entry.credits}}</p>
-                                </div>
-                              </div>
-            
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Debits</label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{entry.debits}}</p>
-                                </div>
-                              </div>
-                              {% endfor %}
-                              <hr>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Total Debit </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{jour.total_debit}}</p>
-                                </div>
-                              </div>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Total Credit </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{jour.total_credit}}</p>
-                                </div>
-                              </div>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Debit_Difference </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{jour.debit_difference}}</p>
-                                </div>
-                                <hr>
-                              </div>
-                              <div class="row mt-2">
-                                <div class="col-5 text-light"><label for="">Credit_Difference </label></div>
-                                <div class="col">
-                                  <p class="bold text-light">:{{jour.credit_difference}}</p>
-                                </div>
-                                <hr>
-                              </div>
-                              
-                            </div><br>
+                        </div><br>
+                      </div>
+                    </div>
+                    
+                   
+        
+                  </div>
+
+          
+                    <div class="col-md-8" id="slipdiv" style="display: none;">
+                      <div class="row">
+                        <div class="col-md-7">
+                          <a class="text-white" style="font-size: 1.5rem;">
+                            
+                          </a>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate; "><i
+                            class="fas fa-eye"></i> Overview</a>
+                        <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
+                          aria-haspopup="true" aria-expanded="false"
+                          style="background-color: white; color: black; margin-left: 2vh;"> Templates
+                        </a>
+        
+                        <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                          <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
+        
+                          <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
+                            Template 2</a>
+        
+                          <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
+                            Template 3</a>
+
+          
+          
                           </div>
+          
+                        </div>
+          
+                        <div class="col-md-6" style="text-align: center;">
+                          {% if view.status == "draft" %}
+                          <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
+                          <a href="{% url 'edit_journal' jour.id %}" class=" text-dark">
+                            <button class="btn btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></button>
+                          </a>
+                          <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </button>
+                        <div class="dropdown-menu text-black">
+                            <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
+                            <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
                         </div>
                         
-                       
-            
-                      </div>
-            
-                      <div class="col-md-8" id="slipdiv" style="display: none;">
-                        <div class="row">
-                          <div class="col-md-7">
-                            <a class="text-white" style="font-size: 1.5rem;">
-                              
-                            </a>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate; "><i
-                                class="fas fa-eye"></i> Overview</a>
-                            <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
-                              aria-haspopup="true" aria-expanded="false"
-                              style="background-color: white; color: black; margin-left: 2vh;"> Templates
-                            </a>
-            
-                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
-                              <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
-            
-                              <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
-                                Template 2</a>
-            
-                              <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
-                                Template 3</a>
-            
-            
-                            </div>
-            
-                          </div>
-            
-                          <div class="col-md-6" style="text-align: center;">
-                            {% if view.status == "draft" %}
-                            <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
-                              <i class="fa fa-save" aria-hidden="true"></i>
-                            </a>
-                            {% endif %}
-                            <a href="" class=" text-dark">
-                              <button class="btn btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></button>
-                            </a>
-                            <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
-                              <i class="fa-solid fa-share-nodes"></i>
-                          </button>
-                          <div class="dropdown-menu text-black">
-                              <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                              <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
-                          </div>
-                          
-                          <a href="" class="  text-dark">
-                            <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                        <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
+                          <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                        </a>
+                          <a class="  text-dark" onclick="exportToPDF4()">
+                            <button class="btn btn-outline-warning" title="Pdf"><i class="fas fa-file-pdf-o"></i></button>
                           </a>
-                            <a class="  text-dark" onclick="exportToPDF4()">
-                              <button class="btn btn-outline-warning" title="Pdf"><i class="fas fa-file-pdf-o"></i></button>
-                            </a>
-                            <a class=" text-dark" onclick="printSelectedArea4()">
-                              <button class="btn btn-outline-warning" title="Print"><i class="fas fa-print"></i>
-                              </button>
-                            </a>
-                            <a class="text-dark" onclick="show_slip()">
-                              <button class="btn btn-outline-warning" title="Slip"><i class="fas fa-receipt"></i></button></a>
-                          </div>
+                          <a class=" text-dark" onclick="printSelectedArea4()">
+                            <button class="btn btn-outline-warning" title="Print"><i class="fas fa-print"></i>
+                            </button>
+                          </a>
+                          <a class="text-dark" onclick="show_slip()">
+                            <button class="btn btn-outline-warning" title="Slip"><i class="fas fa-receipt"></i></button></a>
                         </div>
-            
-            
-                        <div style="background-color: rgb(255, 221, 176);" class="mx-2 my-4">
-            
-                          <div class="my-5 slip-page" size="A4">
-                            <div class="row" style="margin-top: 20%; " id="printslip">
-                              <div class="col-md-3"></div>
-                              <div class="col-md-7">
-                                <div class="card bg-white" style="border: 1px dotted black;padding: 20px;">
-                                  <div class="mt-2" style="text-align: center;padding: 15px;">
-                                    <div class="text-center" style="font-size: 3vh; color: black;">
-                                      <b>{{company.company_name}} </b>
-                                    </div>
-                                    <span style="font-size: x-small; color: black;">{{company.address}} <br>
-                                      {{company.city}},
-                                      {{company.state}}
-                                      {{company.pincode}} <br>
-                                      {{ company.contact_number }} <br>{{ company.company_email }}
-                                    </span>
-                                  </div>
-                                  <div class="ml-4 mt-2" style="color: black;">
-                                    <div class="row">
-                                      <div class="col-md-6 text-left">Date</div>
-                                      <div class="col-md-5 text-right">:{{view.date}}</div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6 text-left">Notes</div>
-                                      <div class="col-md-5 text-right">:{{view.notes}}</div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6 text-left">Reference No</div>
-                                      <div class="col-md-5 text-right">:{{view.reference_no}}</div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6 text-left">Journal No</div>
-                                      <div class="col-md-5 text-right">:{{view.journal_no}}</div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6 text-left">Amount</div>
-                                      <div class="col-md-5 text-right">:{{view.total_debit}}</div>
-                                    </div>
-                                  </div>
-                                  <div><br>
-                                    <div class="equal-length-container" style="color: black; font-weight: bold;">
-                                      <div class="equal-length-item" style=" text-align: center;">
-                                        Account
-                                        <hr style="border-bottom: 1px solid black; margin-top:1vh; width:95%">
-                                      </div>
-                                      
-                                      <div class="equal-length-item" style=" text-align: center; ">
-                                        Contact
-                                        <hr style="border-bottom: 1px solid black; margin-top:1vh; width:60%">
-                                      </div>
-                                      <div class="equal-length-item" style=" text-align: center; ">
-                                        Debits
-                                        <hr style="border-bottom: 1px solid black; margin-top:1vh; width:60%">
-                                      </div>
-                                      <div class="equal-length-item" style=" text-align: center; ">
-                                        Credits
-                                        <hr style="border-bottom: 1px solid black; margin-top:1vh; width:60%">
-                                      </div>
-                                      
-                                    </div>
-                                  </div>
-                                  <div>
-                                    {% for view in journal_entries %}
-                                    <div class="equal-length-container"
-                                      style="color: black; font-size: small; word-wrap: break-word; margin-bottom: 1vh;">
-                                      <div class="equal-length-item" style="text-align: center; margin-left: 2px;">
-                                        {{view.account}}
-                                      </div>
-                                    
-                                      <div class="equal-length-item" style="text-align: center; ">
-                                        {{view.contact}}
-                                      </div>
-                                      <div class="equal-length-item" style="text-align: center; ">
-                                        {{view.debits}}
-                                      </div>
-                                      <div class="equal-length-item" style="text-align: center; ">
-                                        {{view.credits}}
-                                      </div>
-                                      
-                                    </div>
-                                    {% endfor %}
-                                  </div>
-            
-                                  <div><br>
-                                    <div class="row ">
-                                      <div class="col-md-5 text-left" style=" color: black;">
-                                       Total Credit
-                                      </div>
-                                      <div class="col-md-6 " style="color: black;text-align: end;">
-                                        {{ view.total_credit }}
-                                      </div>
-                                    </div>
-                                   
-                                    <div class="row">
-                                      <div class="col-md-5 text-left" style=" color: black;">
-                                        Total Debit
-                                      </div>
-                                      <div class="col-md-6 " style="color: black;text-align: end;">
-                                        {{ view.total_debit }}
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-5 text-left" style=" color: black;">
-                                        Difference
-                                      </div>
-                                      <div class="col-md-6 " style="color: black;text-align: end;">
-                                        {{ view.difference }}
-                                      </div>
-                                    </div>
-                                   
-                                    <hr class="ml-2 mr-2" style="color: black; border-bottom: 1px solid black; ">
-                                  </div>
-            
-            
+                      </div>
+          
+          
+                      <div style="background-color: rgb(255, 221, 176);" class="mx-2 my-4">
+          
+                        <div class="my-5 slip-page" size="A4">
+                          <div class="row" style="margin-top: 20%; " id="printslip">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-7">
+                              <div class="card bg-white" style="border: 1px dotted black;padding: 20px;">
+                                <div class="mt-2" style="text-align: center;padding: 15px;">
                                  
+                                  <span style="font-size: 15px; color: black;">
+                                    {% if log_details.user_type == "Company" %}
+                                    {{jour.company.company_name}}<br>
+                                    {{jour.company.address}}<br>
+                                    {{jour.company.city}}<br>
+                                    {{jour.company.contact}}<br>
+                                {% elif log_details.user_type == "Staff" %}
+                                    {{jour.staff.login_details.first_name}}
+                                    {{jour.staff.login_details.last_name}}<br>
+                                    {{jour.staff.company.company_name}}<br>
+                                    {{jour.staff.login_details.email}}<br>
+                                    {{jour.staff.contact}}<br>
+                                {% endif %}
+
+                                  </span>
                                 </div>
+                                <div class="ml-4 mt-2" style="color: black;">
+                                  <div class="row">
+                                    <div class="col-md-6 text-left">Date</div>
+                                    <div class="col-md-5 text-right">:{{jour.date}}</div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6 text-left">Notes</div>
+                                    <div class="col-md-5 text-right">:{{jour.notes}}</div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6 text-left">Reference No</div>
+                                    <div class="col-md-5 text-right">:{{jour.reference_no}}</div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6 text-left">Journal No</div>
+                                    <div class="col-md-5 text-right">:{{jour.journal_no}}</div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6 text-left">Amount</div>
+                                    <div class="col-md-5 text-right">:{{jour.total_debit}}</div>
+                                  </div>
+                                </div>
+                                <div><br>
+                                  <div class="equal-length-container" style="color: black; font-weight: bold;">
+                                    <div class="equal-length-item" style=" text-align: center;">
+                                      Account
+                                      <hr style="border-bottom: 1px solid black; margin-top:1vh; width:95%">
+                                    </div>
+                                    
+                                    <div class="equal-length-item" style=" text-align: center; ">
+                                      Contact
+                                      <hr style="border-bottom: 1px solid black; margin-top:1vh; width:60%">
+                                    </div>
+                                    <div class="equal-length-item" style=" text-align: center; ">
+                                      Debits
+                                      <hr style="border-bottom: 1px solid black; margin-top:1vh; width:60%">
+                                    </div>
+                                    <div class="equal-length-item" style=" text-align: center; ">
+                                      Credits
+                                      <hr style="border-bottom: 1px solid black; margin-top:1vh; width:60%">
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                                <div>
+                                  {% for view in journal_entries %}
+                                  <div class="equal-length-container"
+                                    style="color: black; font-size: small; word-wrap: break-word; margin-bottom: 1vh;">
+                                    <div class="equal-length-item" style="text-align: center; margin-left: 2px;">
+                                      {{view.account}}
+                                    </div>
+                                  
+                                    <div class="equal-length-item" style="text-align: center; ">
+                                      {{view.contact}}
+                                    </div>
+                                    <div class="equal-length-item" style="text-align: center; ">
+                                      {{view.debits}}
+                                    </div>
+                                    <div class="equal-length-item" style="text-align: center; ">
+                                      {{view.credits}}
+                                    </div>
+                                    
+                                  </div>
+                                  {% endfor %}
+                                </div>
+          
+                                <div><br>
+                                  <div class="row ">
+                                    <div class="col-md-5 text-left" style=" color: black;">
+                                     Total Credit
+                                    </div>
+                                    <div class="col-md-6 " style="color: black;text-align: end;">
+                                      {{ jour.total_credit }}
+                                    </div>
+                                  </div>
+                                 
+                                  <div class="row">
+                                    <div class="col-md-5 text-left" style=" color: black;">
+                                      Total Debit
+                                    </div>
+                                    <div class="col-md-6 " style="color: black;text-align: end;">
+                                      {{ jour.total_debit }}
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-5 text-left" style=" color: black;">
+                                      Debit Difference
+                                    </div>
+                                    <div class="col-md-6 " style="color: black;text-align: end;">
+                                      {{ jour.debit_difference }}
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-5 text-left" style=" color: black;">
+                                      Credit Difference
+                                    </div>
+                                    <div class="col-md-6 " style="color: black;text-align: end;">
+                                      {{ jour.credit_difference }}
+                                    </div>
+                                  </div>
+                                  <hr class="ml-2 mr-2" style="color: black; border-bottom: 1px solid black; ">
+                                </div>
+          
+          
+                               
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-            
-                      <div class="col-md-8" id="templatediv" style="display: none;">
-                        <div class="row">
-                          <div class="col-md-7">
-                            <a class="text-white" style="font-size: 1.5rem;">
-                              
-                            </a>
-                          </div>
+                    </div>
+
+          
+                    <div class="col-md-8" id="templatediv" style="display: none;">
+                      <div class="row">
+                        <div class="col-md-7">
+                          <a class="text-white" style="font-size: 1.5rem;">
+                            
+                          </a>
                         </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate; "><i
-                                class="fas fa-eye"></i> Overview</a>
-                            <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
-                              aria-haspopup="true" aria-expanded="false"
-                              style="background-color: white; color: black; margin-left: 2vh;"> Templates
-                            </a>
-            
-                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
-                              <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
-            
-                              <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
-                                Template 2</a>
-            
-                              <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
-                                Template 3</a>
-            
-            
-                            </div>
-            
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate; "><i
+                            class="fas fa-eye"></i> Overview</a>
+                        <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
+                          aria-haspopup="true" aria-expanded="false"
+                          style="background-color: white; color: black; margin-left: 2vh;"> Templates
+                        </a>
+        
+                        <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                          <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
+        
+                          <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
+                            Template 2</a>
+        
+                          <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
+                            Template 3</a>
+
+          
                           </div>
-            
-                          <div class="col-md-6" style="text-align: center;">
-                            {% if view.status == "draft" %}
+          
+                        </div>
+          
+                        <div class="col-md-6" style="text-align: center;">
+                          {% if view.status == "draft" %}
                             <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
                               <i class="fa fa-save" aria-hidden="true"></i>
                             </a>
                             {% endif %}
-                            <a href="" class=" text-dark">
+                            <a href="{% url 'edit_journal' jour.id %}" class=" text-dark">
                               <button class="btn btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></button>
                             </a>
                             <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
@@ -668,7 +691,7 @@
                               <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
                           </div>
                           
-                          <a href="" class="  text-dark">
+                          <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
                             <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
                           </a>
                             <a class="  text-dark" onclick="exportToPDF()">
@@ -680,441 +703,198 @@
                             </a>
                             <a class="text-dark" onclick="show_slip()">
                               <button class="btn btn-outline-warning" title="Slip"><i class="fas fa-receipt"></i></button></a>
-                          </div>
-                        </div>
-            
-            
-            
-            
-            
-                        <div class="mt-3 template2 whatToPrint2" style="height: auto;width: 100%; margin-left: -1vh">
-            
-                          <section id="selected-area" style="background-color: rgb(255, 221, 176);height: auto;" class=" p-2 m-2">
-                            <!--<header style="	background-color: #8b3131;border-radius: 1rem;">
-                              
-                              <div style="background: #8b3131;color: white;" class="company-info">
-                                <h2 class="text-white">{{Company.company_name}}</h2>
-                                <p class="text-white"> {{company.address}}<br>{{company.city}}</p>
-                                <p> {{company.contact_number}}</p>
-                                <p>{{company.company_email}}</p>
-                              </div>
-                            </header>-->
-                            <div class="invoice-box">
-                              <div style="background:  rgb(110, 61, 46);color: white;" class="company-info">
-                              <h1 class="text-center mt-3" style="color:white;">MANUAL JOURNAL</h1>
-                              <!--<p style="color:#ffff;text-align:center;font-size:17px;">{{jour.staff.company.company_name}}</p>
-                                <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.address}}<br>{{jour.company.city}}</p>
-                                <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.contact}}</p>-->
 
-                                {% if log_details.user_type == "Company" %}
-                                    <p style="color:#ffff;text-align:center;font-size:17px;">{{jour.company.company_name}}</p>
-                                    <p style="color:white;text-align:center;font-size:17px;"> {{jour.company.address}}<br>{{jour.company.city}}</p>
-                                    <p style="color:white;text-align:center;font-size:17px;"> {{jour.company.contact}}</p>
-                                {% elif log_details.user_type == "Staff" %}
-                                    <p style="color:#ffff;text-align:center;font-size:17px;">{{jour.staff.company.company_name}}</p>
-                                    <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.address}}<br>{{jour.staff.company.city}}</p>
-                                    <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.contact}}</p>
-                                {% endif %}
-                              </div>
-                              <div class="row mt-5">
-                                <div class="col-md-8">
-                                  <p class="address" style="font-weight: bold;color: #000;"> To:</p>
-                                  <p class="address" style="font-weight: bold;color: #000;">
-                                    {% if log_details.user_type == "Company" %}
-                                        {{jour.company.company_name}}<br><br>
-                                        {{jour.company.address}}<br><br>
-                                        {{jour.company.city}}<br><br>
-                                        {{jour.company.contact}}<br>
-                                    {% elif log_details.user_type == "Staff" %}
-                                        {{jour.staff.login_details.first_name}}
-                                        {{jour.staff.login_details.last_name}}<br>
-                                        {{jour.staff.company.company_name}}<br>
-                                        {{jour.staff.login_details.email}}<br>
-                                        {{jour.staff.contact}}<br>
-                                    {% endif %}
-                                  </p>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="top-left">
-                                    <div class="mt-2">
-                                      
-                                      <p style="font-weight: bold;color: #000;">Date
-                                        :{{ jour.date}}
-                                      </p>
-                                      <p style="font-weight: bold;color: #000;">Journal no
-                                        :{{ jour.journal_no}}
-                                      </p>
-                                      <p style="font-weight: bold;color: #000;">Reference no
-                                        :{{ jour.reference_no}}
-                                      </p>
-                                      <p style="font-weight: bold;color: #000;">Amount
-                                        :{{ jour.total_debit}}
-                                      </p>
-                                      <p style="font-weight: bold;color: #000;">Notes
-                                        :{{ jour.notes}}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-            
-                              <section class="product-area mt-2">
-                                <table class="table table-hover table-bordered table-secondary">
-                                  <thead>
-                                    <tr class="">
-                                      <th class="text-center" style="color:#8b3131;">Account Name</th>
-                                      <th class="text-center" style="color:#8b3131;">Description</th>
-                                      <th class="text-center" style="color:#8b3131;">Contact</th>
-                                      <th class="text-center" style="color:#8b3131;">Debits</th>
-                                      <th class="text-center" style="color:#8b3131;">Credits</th>
-                                      
-                                    </tr>
-                                  </thead>
-                                  {% for view in journal_entries %}
-                                  <tbody>
-                                    
-                                    <tr>
-                                      
-                                      <td class="text-center" style="color:#000">{{ view.account }}</td>
-                                      <td class="text-center" style="color:#000">{{ view.description}}</td>
-                                      <td class="text-center" style="color:#000">{{ view.contact }}</td>
-                                      <td class="text-center" style="color:#000">{{ view.debits }}</td>
-                                      <td class="text-center" style="color:#000">{{ view.credits }}</td>
-                                      
-                                    </tr>
-                                    
-                                    
-                                  </tbody>
-                                  {% endfor %}
-                                </table>
-                              </section>
-            
-                              <div class="invoice-total">
-                                <div class="row">
-                                  <div class="col-6"></div>
-            
-            
-                                  <div class="col-4">
-                                    <table style="margin-left: 10vh;">
-                                      <tr>
-                                        <td class="table-cell text-black" style="border: none;">Total Credit</td>
-                                        <td class="table-cell text-black" style="border: none;">:</td>
-                                        <td class="table-cell text-black" style="border: none;">{{jour.total_credit}}</td>
-                                      </tr>
-                                     
-                                      <tr>
-                                        <td class="table-cell text-black" style="border: none;">Total Debit</td>
-                                        <td class="table-cell text-black" style="border: none;">:</td>
-                                        <td class="table-cell text-black" style="border: none;">{{jour.total_debit}}</td>
-                                      </tr>
-                                      <tr>
-                                        <td class="table-cell text-black" style="border: none;">Credit Difference</td>
-                                        <td class="table-cell text-black" style="border: none;">:</td>
-                                        <td class="table-cell text-black" style="border: none;">{{jour.credit_difference}}</td>
-                                      </tr>
-                                      <tr>
-                                        <td class="table-cell text-black" style="border: none;">Debit Difference</td>
-                                        <td class="table-cell text-black" style="border: none;">:</td>
-                                        <td class="table-cell text-black" style="border: none;">{{jour.debit_difference}}</td>
-                                      </tr>
-                                     
-                                     
-                                    </table>
-                                  </div>
-            
-                                </div>
-            
-                              </div>
-            
-                            </div>
-            
-                            <footer class="mb-5">
-                              <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi, Ernamkulam, kerala India 12345
-                                | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
-                            </footer>
-                          </section>
                         </div>
                       </div>
-            
-                      <div class="col-md-8" id="templatediv2" style="display: none;">
-                        <div class="row">
-                          <div class="col-md-7">
-                            <a class="text-white" style="font-size: 1.5rem;">
-                             
-                            </a>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate; "><i
-                                class="fas fa-eye"></i> Overview</a>
-                            <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
-                              aria-haspopup="true" aria-expanded="false"
-                              style="background-color: white; color: black; margin-left: 2vh;"> Templates
-                            </a>
-            
-                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
-                              <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
-            
-                              <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
-                                Template 2</a>
-            
-                              <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
-                                Template 3</a>
-            
-            
-                            </div>
-            
-                          </div>
-            
-                          <div class="col-md-6" style="text-align: center;">
-                            {% if view.status == "draft" %}
-                            <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
-                              <i class="fa fa-save" aria-hidden="true"></i>
-                            </a>
-                            {% endif %}
-                            <a href="" class=" text-dark">
-                              <button class="btn btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></button>
-                              <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </button>
-                            <div class="dropdown-menu text-black">
-                                <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                                <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
-                            </div>
+          
+          
+          
+          
+          
+                      <div class="mt-3 template2 whatToPrint2" style="height: auto;width: 100%; margin-left: -1vh">
+          
+                        <section id="selected-area" style="background-color: rgb(255, 221, 176);height: auto;" class=" p-2 m-2">
+                          <!--<header style="	background-color: #8b3131;border-radius: 1rem;">
                             
-                            <a href="" class="  text-dark">
-                              <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                            </a>
-                            <a class="  text-dark" onclick="exportToPDF2()">
-                              <button class="btn btn-outline-warning" title="Pdf"><i class="fas fa-file-pdf-o"></i></button>
-                            </a>
-                            <a class=" text-dark" onclick="printSelectedArea2()">
-                              <button class="btn btn-outline-warning" title="Print"><i class="fas fa-print"></i>
-                              </button>
-                            </a>
-                            <a class="text-dark" onclick="show_slip()">
-                              <button class="btn btn-outline-warning" title="Slip"><i class="fas fa-receipt"></i></button></a>
-                          </div>
-                        </div>
-            
-            
-            
-            
-            
-                        <div id="template1" class="printTemplates template1">
-                          <div class="my-3 page" style="background-color: rgb(255, 221, 176);" id="selected-area2">
-                            <!--<div class="p-5">
-                              <div style="background-color: #8b3131;border-radius: 1rem;padding: 20px;">
-                              <h3>{{jour.status}}</h3>
-                                <h3>Journal</h3>
-                                <h3>Journal no:{{jour.journal_no}}</h3> 
-                              </div>-->
-                              <div class="p-3" style="display: flex; justify-content: space-between; align-items: center;background-color: #8b3131;">
-                                
-                                <div>
-                                    <h5 style="color:white;">{{jour.status}}</h5>
-                                </div>
-                                <div>
-                                    <h3 style="color:white;">Journal</h3>
-                                </div>
-                                <div>
-                                    <h5 style="color:white;">Journal no:{{jour.journal_no}}</h5>
-                                </div>
-                              
+                            <div style="background: #8b3131;color: white;" class="company-info">
+                              <h2 class="text-white">{{Company.company_name}}</h2>
+                              <p class="text-white"> {{company.address}}<br>{{company.city}}</p>
+                              <p> {{company.contact_number}}</p>
+                              <p>{{company.company_email}}</p>
                             </div>
-                            
-                              <div class="row mt-5">
-                                <div class="col-md-8">
+                          </header>-->
+                          <div class="invoice-box">
+                            <div style="background:  rgb(110, 61, 46);color: white;" class="company-info">
+                            <h1 class="text-center mt-3" style="color:white;">MANUAL JOURNAL</h1>
+                            <!--<p style="color:#ffff;text-align:center;font-size:17px;">{{jour.staff.company.company_name}}</p>
+                              <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.address}}<br>{{jour.company.city}}</p>
+                              <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.contact}}</p>-->
+
+                              {% if log_details.user_type == "Company" %}
+                                  <p style="color:#ffff;text-align:center;font-size:17px;">{{jour.company.company_name}}</p>
+                                  <p style="color:white;text-align:center;font-size:17px;"> {{jour.company.address}}<br>{{jour.company.city}}</p>
+                                  <p style="color:white;text-align:center;font-size:17px;"> {{jour.company.contact}}</p>
+                              {% elif log_details.user_type == "Staff" %}
+                                  <p style="color:#ffff;text-align:center;font-size:17px;">{{jour.staff.company.company_name}}</p>
+                                  <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.address}}<br>{{jour.staff.company.city}}</p>
+                                  <p style="color:white;text-align:center;font-size:17px;"> {{jour.staff.company.contact}}</p>
+                              {% endif %}
+                            </div>
+                            <div class="row mt-5">
+                              <div class="col-md-8">
+                                <p class="address" style="font-weight: bold;color: #000;"> To:</p>
+                                <p class="address" style="font-weight: bold;color: #000;">
+                                  {% if log_details.user_type == "Company" %}
+                                      {{jour.company.company_name}}<br><br>
+                                      {{jour.company.address}}<br><br>
+                                      {{jour.company.city}}<br><br>
+                                      {{jour.company.contact}}<br>
+                                  {% elif log_details.user_type == "Staff" %}
+                                      {{jour.staff.login_details.first_name}}
+                                      {{jour.staff.login_details.last_name}}<br>
+                                      {{jour.staff.company.company_name}}<br>
+                                      {{jour.staff.login_details.email}}<br>
+                                      {{jour.staff.contact}}<br>
+                                  {% endif %}
+                                </p>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="top-left">
+                                  <div class="mt-2">
+                                    
+                                    <p style="font-weight: bold;color: #000;">Date
+                                      :{{ jour.date}}
+                                    </p>
+                                    <p style="font-weight: bold;color: #000;">Journal no
+                                      :{{ jour.journal_no}}
+                                    </p>
+                                    <p style="font-weight: bold;color: #000;">Reference no
+                                      :{{ jour.reference_no}}
+                                    </p>
+                                    <p style="font-weight: bold;color: #000;">Amount
+                                      :{{ jour.total_debit}}
+                                    </p>
+                                    <p style="font-weight: bold;color: #000;">Notes
+                                      :{{ jour.notes}}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+          
+                            <section class="product-area mt-2">
+                              <table class="table table-hover table-bordered table-secondary">
+                                <thead>
+                                  <tr class="">
+                                    <th class="text-center" style="color:#8b3131;">Account Name</th>
+                                    <th class="text-center" style="color:#8b3131;">Description</th>
+                                    <th class="text-center" style="color:#8b3131;">Contact</th>
+                                    <th class="text-center" style="color:#8b3131;">Debits</th>
+                                    <th class="text-center" style="color:#8b3131;">Credits</th>
+                                    
+                                  </tr>
+                                </thead>
+                                {% for view in journal_entries %}
+                                <tbody>
                                   
-                                  <p class="address" style="font-weight: bold;color: #000;">
-                                    {% if log_details.user_type == "Company" %}
-                                        {{jour.company.company_name}}<br><br>
-                                        {{jour.company.address}}<br><br>
-                                        {{jour.company.city}}<br><br>
-                                        {{jour.company.contact}}<br>
-                                    {% elif log_details.user_type == "Staff" %}
-                                        {{jour.staff.login_details.first_name}}
-                                        {{jour.staff.login_details.last_name}}<br>
-                                        {{jour.staff.company.company_name}}<br>
-                                        {{jour.staff.login_details.email}}<br>
-                                        {{jour.staff.contact}}<br>
-                                    {% endif %}
-
-                                  </p>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="top-left">
-                                    <div class="mt-2">
-                                      <p style="color: #000;">Notes
-                                        <b>:{{ jour.notes}}</b>
-                                      </p>
-                                      <p style="color: #000;">Date
-                                        <b>:{{ jour.date}}</b>
-                                      </p>
-                                      <p style="color: #000;">Journal no
-                                        <b>:{{ jour.journal_no}}</b>
-                                      </p>
-                                      <p style="color: #000;">Reference no
-                                        <b>:{{ jour.reference_no}}</b>
-                                      </p>
-                                      <p style="color: #000;">Amount
-                                        <b>:{{ jour.total_debit}}</b>
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <section class="top-content bb d-flex justify-content-between">
-                                <div class="logo">
-            
-                                </div>
-            
-                              </section>
-            
-                              
-            
-                              <section class="product-area mt-2">
-                                <table class="table table-hover table-bordered table-secondary">
-                                  <thead>
-                                    <tr class="">
-                                      <th class="text-center" style="color:#8b3131;">Account Name</th>
-                                      <th class="text-center" style="color:#8b3131;">Description</th>
-                                      <th class="text-center" style="color:#8b3131;">Contact</th>
-                                      <th class="text-center" style="color:#8b3131;">Debits</th>
-                                      <th class="text-center" style="color:#8b3131;">Credits</th>
-                                      
-                                    </tr>
-                                  </thead>
-                                  {% for view in journal_entries %}
-                                  <tbody>
+                                  <tr>
                                     
+                                    <td class="text-center" style="color:#000">{{ view.account }}</td>
+                                    <td class="text-center" style="color:#000">{{ view.description}}</td>
+                                    <td class="text-center" style="color:#000">{{ view.contact }}</td>
+                                    <td class="text-center" style="color:#000">{{ view.debits }}</td>
+                                    <td class="text-center" style="color:#000">{{ view.credits }}</td>
+                                    
+                                  </tr>
+                                  
+                                  
+                                </tbody>
+                                {% endfor %}
+                              </table>
+                            </section>
+          
+                            <div class="invoice-total">
+                              <div class="row">
+                                <div class="col-6"></div>
+          
+          
+                                <div class="col-4">
+                                  <table style="margin-left: 10vh;">
                                     <tr>
-                                      
-                                      <td class="text-center" style="color:#000">{{ view.account }}</td>
-                                      <td class="text-center" style="color:#000">{{ view.description}}</td>
-                                      <td class="text-center" style="color:#000">{{ view.contact }}</td>
-                                      <td class="text-center" style="color:#000">{{ view.debits }}</td>
-                                      <td class="text-center" style="color:#000">{{ view.credits }}</td>
-                                      
+                                      <td class="table-cell text-black" style="border: none;">Total Credit</td>
+                                      <td class="table-cell text-black" style="border: none;">:</td>
+                                      <td class="table-cell text-black" style="border: none;">{{jour.total_credit}}</td>
                                     </tr>
-                                    
-                                    
-                                  </tbody>
-                                  {% endfor %}
-                                </table>
-                              </section>
-            
-                              <section class="balance-info">
-                                <div class="row mt-3">
-                                  <div class="col-4">
-                                    <table class="table table-borderless">
-                                      <tbody>
-            
-                                        <!-- <tr >
-                                                          <td style="color: #000;text-align: left;">Payment Type</td>
-                                                          <td style="color: #000;text-align: left;">:</td>
-                                                          {% if bank %}
-                                                          <th style="color: #000;text-align: center;">{{bank.bankname}}</th>
-                                                          {% else %}
-                                                          <th style="color: #000;text-align: center;">{{pbill.payment_type}}</th>
-                                                          {% endif %}
-                                                      </tr>
-                                                      <tr>
-                                                          <td></td>
-                                                          <td></td>
-                                                          <td></td>
-                                                          
-                                                      </tr> -->
-                                        
-            
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                  <div class="col-4"></div>
-                                  <div class="col-4">
-                                    <table class="table table-borderless">
-                                      <tbody>
-                                        <tr>
-                                          <td style="color: #000;">Total Credit</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-center" style="color: #000;">
-                                            {{jour.total_credit}}</td>
-                                        </tr>
-                                       
-                                        <tr>
-                                          <td style="color: #000;">Total Debit</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-center" style="color: #000;">
-                                            {{jour.total_debit}}</td>
-                                        </tr>
-                                        <tr>
-                                          <td style="color: #000;">Credit Difference</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-center" style="color: #000;">
-                                            {{jour.credit_difference}}</td>
-                                        </tr>
-                                        <tr>
-                                          <td style="color: #000;">Debit Difference</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-center" style="color: #000;">
-                                            {{jour.debit_difference}}</td>
-                                        </tr>
-                                        
-            
-                                      </tbody>
-            
-                                    </table>
-            
-                                  </div>
+                                   
+                                    <tr>
+                                      <td class="table-cell text-black" style="border: none;">Total Debit</td>
+                                      <td class="table-cell text-black" style="border: none;">:</td>
+                                      <td class="table-cell text-black" style="border: none;">{{jour.total_debit}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="table-cell text-black" style="border: none;">Credit Difference</td>
+                                      <td class="table-cell text-black" style="border: none;">:</td>
+                                      <td class="table-cell text-black" style="border: none;">{{jour.credit_difference}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="table-cell text-black" style="border: none;">Debit Difference</td>
+                                      <td class="table-cell text-black" style="border: none;">:</td>
+                                      <td class="table-cell text-black" style="border: none;">{{jour.debit_difference}}</td>
+                                    </tr>
+                                   
+                                   
+                                  </table>
                                 </div>
-                                <footer class="mb-5">
-                                  <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi,
-                                    Ernamkulam,
-                                    kerala India 12345
-                                    | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
-                                </footer>
-                              </section>
-            
+          
+                              </div>
+          
                             </div>
+          
                           </div>
-                        </div>
-            
+          
+                          <footer class="mb-5">
+                            <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi, Ernamkulam, kerala India 12345
+                              | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
+                          </footer>
+
+                        </section>
                       </div>
-            
-                      <div class="col-md-8" id="templatediv3" style="display: none;">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <a class="text-white" style="font-size: 1.5rem;">
-                              
-                            </a>
-                          </div>
+                    </div>
+          
+                    <div class="col-md-8" id="templatediv2" style="display: none;">
+                      <div class="row">
+                        <div class="col-md-7">
+                          <a class="text-white" style="font-size: 1.5rem;">
+                           
+                          </a>
                         </div>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;"><i
-                                class="fas fa-eye"></i> Overview</a>
-                            <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
-                              aria-haspopup="true" aria-expanded="false"
-                              style="background-color: white; color: black; margin-left: 2vh;"> Templates
-                            </a>
-            
-                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
-                              <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
-            
-                              <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
-                                Template 2</a>
-            
-                              <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
-                                Template 3</a>
-            
-            
-                            </div>
-            
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate; "><i
+                            class="fas fa-eye"></i> Overview</a>
+                        <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
+                          aria-haspopup="true" aria-expanded="false"
+                          style="background-color: white; color: black; margin-left: 2vh;"> Templates
+                        </a>
+        
+                        <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                          <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
+        
+                          <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
+                            Template 2</a>
+        
+                          <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
+                            Template 3</a>
+
+          
+          
                           </div>
-            
-                          <div class="col-md-6" style="text-align: center;">
-                            {% if view.status == "draft" %}
+          
+                        </div>
+          
+                        <div class="col-md-6" style="text-align: center;">
+                          {% if view.status == "draft" %}
                             <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
                               <i class="fa fa-save" aria-hidden="true"></i>
                             </a>
@@ -1124,173 +904,409 @@
                             </a>
                             <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
                               <i class="fa-solid fa-share-nodes"></i>
-                            </button>
-                            <div class="dropdown-menu text-black">
-                                <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                                <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
-                            </div>
+                          </button>
+                          <div class="dropdown-menu text-black">
+                              <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
+                              <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
+                          </div>
                           
-                            <a href="" class="  text-dark">
-                              <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                            </a>
-                            <a class="  text-dark" onclick="exportToPDF3()">
+                          <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
+                            <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                          </a>
+                            <a class="  text-dark" onclick="exportToPDF()">
                               <button class="btn btn-outline-warning" title="Pdf"><i class="fas fa-file-pdf-o"></i></button>
                             </a>
-                            <a class=" text-dark" onclick="printSelectedArea3()">
+                            <a class=" text-dark" onclick="printSelectedArea()">
                               <button class="btn btn-outline-warning" title="Print"><i class="fas fa-print"></i>
                               </button>
                             </a>
                             <a class="text-dark" onclick="show_slip()">
                               <button class="btn btn-outline-warning" title="Slip"><i class="fas fa-receipt"></i></button></a>
-                          </div>
                         </div>
-            
-            
-            
-            
-            
-                        <div id="template3" class="template3">
-                          <div class="my-5 page" size="A4" style="background-color: rgb(255, 221, 176);">
-                            <div class="p-5" id="selected-area3">
-                              <section class="top-content bb d-flex justify-content-between" style="background-color: #8b3131;">
-                                <div class="logo">
-                                  <!-- <img src="logo.png" alt="" class="img-fluid"> -->
-                                </div>
-                                <div class="top-left">
-                                  <div >
-                                    <p style="font-size:15px;color:white;">Manual Journal</p>
-                                  </div>
-                                  
-                                </div>
-                              </section>
-            
-                              <div class="row mt-5">
-                                <div class="col-md-8">
-                                  <p style="font-weight: bold;color: #000;"> From, <p>
-                                  <p class="address" style="font-weight: bold;color: #000;">
-                                    {% if log_details.user_type == "Company" %}
-                                        {{jour.company.company_name}}<br><br>
-                                        {{jour.company.address}}<br><br>
-                                        {{jour.company.city}}<br><br>
-                                        {{jour.company.contact}}<br>
-                                    {% elif log_details.user_type == "Staff" %}
-                                        {{jour.staff.login_details.first_name}}
-                                        {{jour.staff.login_details.last_name}}<br>
-                                        {{jour.staff.company.company_name}}<br>
-                                        {{jour.staff.login_details.email}}<br>
-                                        {{jour.staff.contact}}<br>
-                                    {% endif %}
+                      </div>
+          
+          
+          
+          
+          
+                      <div id="template1" class="printTemplates template1">
+                        <div class="my-3 page" style="background-color: rgb(255, 221, 176);" id="selected-area2">
+                          <div class="p-5">
+                            <div style="background-color: #8b3131;border-radius: 1rem;padding: 20px;">
+                              <center class="h3 text-light"><b>MANUAL JOURNAL</b></center>
+                            </div>
+                            <div class="row mt-5">
+                              <div class="col-md-8">
+                                <!--<h4 class="text-secondary" style="font-weight: bold;">{{company.company_name }}</h4>-->
+                                <p class="address" style="font-weight: bold;color: #000;">
+                                  {% if log_details.user_type == "Company" %}
+                                  {{jour.company.company_name}}<br><br>
+                                  {{jour.company.address}}<br><br>
+                                  {{jour.company.city}}<br><br>
+                                  {{jour.company.contact}}<br>
+                              {% elif log_details.user_type == "Staff" %}
+                                  {{jour.staff.login_details.first_name}}
+                                  {{jour.staff.login_details.last_name}}<br>
+                                  {{jour.staff.company.company_name}}<br>
+                                  {{jour.staff.login_details.email}}<br>
+                                  {{jour.staff.contact}}<br>
+                              {% endif %}
 
-                                  </p>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="top-left">
-                                    <div class="mt-2">
-                                      <p style="font-weight: bold;color: #000;"> To, <p>
-                                        <p class="address" style="font-weight: bold;color: #000;">
-                                          {% if log_details.user_type == "Company" %}
-                                              {{jour.company.company_name}}<br><br>
-                                              {{jour.company.address}}<br><br>
-                                              {{jour.company.city}}<br><br>
-                                              {{jour.company.contact}}<br>
-                                          {% elif log_details.user_type == "Staff" %}
-                                              {{jour.staff.login_details.first_name}}
-                                              {{jour.staff.login_details.last_name}}<br>
-                                              {{jour.staff.company.company_name}}<br>
-                                              {{jour.staff.login_details.email}}<br>
-                                              {{jour.staff.contact}}<br>
-                                          {% endif %}
-      
-                                        </p>
-                                    </div>
+                                </p>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="top-left">
+                                  <div class="mt-2">
+                                    <p style="color: #000;">Notes
+                                      <b>:{{ jour.notes}}</b>
+                                    </p>
+                                    <p style="color: #000;">Date
+                                      <b>:{{ jour.date}}</b>
+                                    </p>
+                                    <p style="color: #000;">Journal no
+                                      <b>:{{ jour.journal_no}}</b>
+                                    </p>
+                                    <p style="color: #000;">Reference no
+                                      <b>:{{ jour.reference_no}}</b>
+                                    </p>
+                                    <p style="color: #000;">Amount
+                                      <b>:{{ jour.total_debit}}</b>
+                                    </p>
                                   </div>
                                 </div>
                               </div>
-            
-                              <section class="product-area mt-4">
-                                <table class=" table table-hover table-bordered " id="table1">
-                                  <thead>
-                                    <tr>
-                                      <td style="text-align: center; font-weight:bold; color:black ">Account name</td>
-                                      <td style="font-weight:bold; color:black">Description</td>
-                                      <td style="font-weight:bold; color:black">Contact</td>
-                                      <td style="font-weight:bold; color:black">Debits</td>
-                                      <td style="font-weight:bold; color:black">Credits</td>
-                                     
-                                    </tr>
-                                  </thead>
-                                  {% for view in journal_entries %}
-                                  <tbody>
-            
-                                    <tr>
-                                      
-                                      <td style="color:black; text-align: center;">{{view.account}}</td>
-                                      <td style="color:black">{{view.description}}</td>
-                                      <td style="color:black">{{view.contact}}</td>
-                                      <td style="color:black">{{view.debits}} </td>
-                                      <td style="color:black">{{view.credits}} </td>
-                                      
-            
-                                    </tr>
-                                    
-                                  </tbody>
-                                  {% endfor %}
-                                </table><br><br>
-                              </section>
-            
-                              <section class="balance-info">
-                                <div class="row">
-                                  <div class="col-4"></div>
-                                  <div class="col-4"></div>
-                                  <div class="col-4">
-                                    <table class="table table-borderless">
-                                      <tbody>
-                                        <tr>
-                                          <td style="color: #000;">Total Debit</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-right" style="color: #000;">
-                                            {{view.total_debit}}</td>
-                                        </tr>
-                                        
-                                        <tr>
-                                          <td style="color: #000;">Total Credit</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-right" style="color: #000;">
-                                            {{view.total_credit}}</td>
-                                        </tr>
-                                        <tr>
-                                          <td style="color: #000;">Difference</td>
-                                          <td style="color: #000;">:</td>
-                                          <td class="text-right" style="color: #000;">{{view.difference}}</td>
-                                        </tr>
-                                        
-            
-                                      </tbody>
-            
-                                    </table>
-            
-                                  </div>
-            
-                                  <footer class="mb-5">
-                                    <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi,
-                                      Ernamkulam,
-                                      kerala India 12345
-                                      | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
-                                  </footer>
-                                </div>
-                              </section>
-            
-                              <!-- Cart BG -->
-                              <img src="cart.jpg" class="img-fluid cart-bg" alt="">
-            
-                              
                             </div>
+                            <section class="top-content bb d-flex justify-content-between">
+                              <div class="logo">
+          
+                              </div>
+          
+                            </section>
+          
+                            
+          
+                            <section class="product-area mt-2">
+                              <table class="table table-hover table-bordered table-secondary">
+                                <thead>
+                                  <tr class="">
+                                    <th class="text-center" style="color:#8b3131;">Account Name</th>
+                                    <th class="text-center" style="color:#8b3131;">Description</th>
+                                    <th class="text-center" style="color:#8b3131;">Contact</th>
+                                    <th class="text-center" style="color:#8b3131;">Debits</th>
+                                    <th class="text-center" style="color:#8b3131;">Credits</th>
+                                    
+                                  </tr>
+                                </thead>
+                                {% for view in journal_entries %}
+                                <tbody>
+                                  
+                                  <tr>
+                                    
+                                    <td class="text-center" style="color:#000">{{ view.account }}</td>
+                                    <td class="text-center" style="color:#000">{{ view.description}}</td>
+                                    <td class="text-center" style="color:#000">{{ view.contact }}</td>
+                                    <td class="text-center" style="color:#000">{{ view.debits }}</td>
+                                    <td class="text-center" style="color:#000">{{ view.credits }}</td>
+                                    
+                                  </tr>
+                                  
+                                  
+                                </tbody>
+                                {% endfor %}
+                              </table>
+                            </section>
+          
+                            <section class="balance-info">
+                              <div class="row mt-3">
+                                <div class="col-4">
+                                  <table class="table table-borderless">
+                                    <tbody>
+          
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                  <table class="table table-borderless">
+                                    <tbody>
+                                      <tr>
+                                        <td style="color: #000;">Total Credit</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-center" style="color: #000;">
+                                          {{jour.total_credit}}</td>
+                                      </tr>
+                                     
+                                      <tr>
+                                        <td style="color: #000;">Total Debit</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-center" style="color: #000;">
+                                          {{jour.total_debit}}</td>
+                                      </tr>
+                                      <tr>
+                                        <td style="color: #000;">Debit Difference</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-center" style="color: #000;">
+                                          {{jour.debit_difference}}</td>
+                                      </tr>
+                                      <tr>
+                                        <td style="color: #000;">Credit Difference</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-center" style="color: #000;">
+                                          {{jour.credit_difference}}</td>
+                                      </tr>
+                                      
+          
+                                    </tbody>
+          
+                                  </table>
+          
+                                </div>
+                              </div>
+                              <footer class="mb-5">
+                                <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi,
+                                  Ernamkulam,
+                                  kerala India 12345
+                                  | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
+                              </footer>
+                            </section>
+          
                           </div>
                         </div>
+                      </div>
+          
+                    </div>
+          
+                    <div class="col-md-8" id="templatediv3" style="display: none;">
+                      <div class="row">
+                        <div class="col-md-7">
+                          <a class="text-white" style="font-size: 1.5rem;">
+                            
+                          </a>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;"><i
+                              class="fas fa-eye"></i> Overview</a>
+                          <a href=" " class=" btn fa fa-file-alt" data-bs-toggle="dropdown" id="attachmentDropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            style="background-color: white; color: black; margin-left: 2vh;"> Templates
+                          </a>
+          
+                          <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                            <a class="dropdown-item" onclick="totemplate()"><i class="fa fa-file-alt"></i> Template 1</a>
+          
+                            <a class="dropdown-item" onclick="totemplate2()"><i class="fa fa-file-alt"></i>
+                              Template 2</a>
+          
+                            <a class="dropdown-item" onclick="totemplate3()"><i class="fa fa-file-alt"></i>
+                              Template 3</a>
+          
+          
+                          </div>
+          
+                        </div>
+          
+                        <div class="col-md-6" style="text-align: center;">
+                          {% if view.status == "draft" %}
+                            <a href="{% url 'update_journal_status' view.id %}" class="btn btn-outline-warning" title="Save">
+                              <i class="fa fa-save" aria-hidden="true"></i>
+                            </a>
+                            {% endif %}
+                            <a href="" class=" text-dark">
+                              <button class="btn btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></button>
+                            </a>
+                            <button class="btn btn-outline-warning" type="button" data-bs-toggle="dropdown">
+                              <i class="fa-solid fa-share-nodes"></i>
+                          </button>
+                          <div class="dropdown-menu text-black">
+                              <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
+                              <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
+                          </div>
+                          
+                          <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
+                            <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                          </a>
+                            <a class="  text-dark" onclick="exportToPDF()">
+                              <button class="btn btn-outline-warning" title="Pdf"><i class="fas fa-file-pdf-o"></i></button>
+                            </a>
+                            <a class=" text-dark" onclick="printSelectedArea()">
+                              <button class="btn btn-outline-warning" title="Print"><i class="fas fa-print"></i>
+                              </button>
+                            </a>
+                            <a class="text-dark" onclick="show_slip()">
+                              <button class="btn btn-outline-warning" title="Slip"><i class="fas fa-receipt"></i></button></a>
+                        </div>
+                      </div>
+          
+          
+          
+          
+          
+                      <div id="template3" class="template3">
+                        <div class="my-5 page" size="A4" style="background-color: rgb(255, 221, 176);">
+                          <div class="p-5" id="selected-area3">
+                            <section class="top-content bb d-flex justify-content-between" style="background-color: #8b3131;">
+                              <div class="logo">
+                                <!-- <img src="logo.png" alt="" class="img-fluid"> -->
+                              </div>
+                              <div class="top-left">
+                                <div >
+                                  <p style="font-size:25px;color:white;">Manual Journal</p>
+                                </div>
+                                
+                              </div>
+                            </section>
+          
+                            <section class="store-user mt-5">
+                              <div class="container">
+                                  <div class="row">
+                                      <!-- Left side content -->
+                                      <div class="col-md-6">
+                                          <div class="row bb pb-3">
+                                              <div class="col-12 text-dark">
+                                                  <p style="color:black;">FROM,</p>
+                                                  {% if log_details.user_type == "Company" %}
+                                                  {{jour.company.company_name}}<br><br>
+                                                  {{jour.company.address}}<br><br>
+                                                  {{jour.company.city}}<br><br>
+                                                  {{jour.company.contact}}<br>
+                                                  {% elif log_details.user_type == "Staff" %}
+                                                  {{jour.staff.login_details.first_name}}
+                                                  {{jour.staff.login_details.last_name}}<br>
+                                                  {{jour.staff.company.company_name}}<br>
+                                                  {{jour.staff.login_details.email}}<br>
+                                                  {{jour.staff.contact}}<br>
+                                                  {% endif %}
+                                              </div>
+                                          </div>
+                                      </div>
+                                      
+                                      <!-- Right side content -->
+                                      <div class="col-md-6">
+                                          <div class="row extra-info pt-3 text-right">
+                                              <div class="col-12 text-dark">
+                                                  <p style="color:black;">Notes <span>:{{jour.notes}}</span></p>
+                                                  <p style="color:black;">Date <span>:{{jour.date}}</span></p>
+                                                  <p style="color:black;">Journal No <span>:{{jour.journal_no}}</span></p>
+                                                  <p style="color:black;">Reference No <span>:{{jour.reference_no}}</span></p>
+                                                  <p style="color:black;">Amount <span>:{{jour.total_debit}}</span></p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </section>
+                          
+                          
+                            <section class="product-area mt-4">
+                              <table class=" table table-hover table-bordered " id="table1">
+                                <thead>
+                                  <tr>
+                                    <td style="text-align: center; font-weight:bold; color:black ">Account name</td>
+                                    <td style="font-weight:bold; color:black">Description</td>
+                                    <td style="font-weight:bold; color:black">Contact</td>
+                                    <td style="font-weight:bold; color:black">Debits</td>
+                                    <td style="font-weight:bold; color:black">Credits</td>
+                                   
+                                  </tr>
+                                </thead>
+                                {% for view in journal_entries %}
+                                <tbody>
+          
+                                  <tr>
+                                    
+                                    <td style="color:black; text-align: center;">{{view.account}}</td>
+                                    <td style="color:black">{{view.description}}</td>
+                                    <td style="color:black">{{view.contact}}</td>
+                                    <td style="color:black">{{view.debits}} </td>
+                                    <td style="color:black">{{view.credits}} </td>
+                                    
+          
+                                  </tr>
+                                  
+                                </tbody>
+                                {% endfor %}
+                              </table><br><br>
+                            </section>
+          
+                            <section class="balance-info">
+                              <div class="row">
+                                <div class="col-4"></div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                  <table class="table table-borderless">
+                                    <tbody>
+                                      <tr>
+                                        <td style="color: #000;">Total Debit</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-right" style="color: #000;">
+                                          {{jour.total_debit}}</td>
+                                      </tr>
+                                      
+                                      <tr>
+                                        <td style="color: #000;">Total Credit</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-right" style="color: #000;">
+                                          {{jour.total_credit}}</td>
+                                      </tr>
+                                      <tr>
+                                        <td style="color: #000;">Debit Difference</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-right" style="color: #000;">{{jour.debit_difference}}</td>
+                                      </tr>
+                                      <tr>
+                                        <td style="color: #000;">Credit Difference</td>
+                                        <td style="color: #000;">:</td>
+                                        <td class="text-right" style="color: #000;">{{jour.credit_difference}}</td>
+                                      </tr>
+                                      
+          
+                                    </tbody>
+          
+                                  </table>
+          
+                                </div>
+          
+                                <footer class="mb-5">
+                                  <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi,
+                                    Ernamkulam,
+                                    kerala India 12345
+                                    | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
+                                </footer>
+                              </div>
+                            </section>
+          
+                          </div>
+                        </div>
+                      </div>
+          
+                    </div>
             
                       
                       
                         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         
                           <!--------- add comment ---------------->
                           <div class="modal fade mt-5" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="addCommentModalLabel" aria-hidden="true">
@@ -1330,6 +1346,8 @@
                                                                 <a class="btn text-danger" onclick="deleteComment('{{ comment.id }}', '{{ journal.id }}')">
                                                                     <i class="fas fa-trash"></i>
                                                                 </a>
+
+                                                                
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
@@ -1407,9 +1425,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-Bk2IxCYIbW6l0/mD4YKs/wE6xxvCEjVyQVuRj2VuTKlf6Ayb6BjdrM6OtqLZiVNiGKcFtdNPxXEhR9Wx4sLh9g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <script>
-    function deleteComment(commentId,journalid) {
+    function deleteComment(commentId,journalId) {
         if (confirm('Are you sure you want to delete this comment?')) {
-            window.location.href = `/delete_journal_comment/${commentId}/${journalid}/`;
+            window.location.href = `/delete_journal_comment/${commentId}/${journalId}/`;
         }
     }
 </script>
