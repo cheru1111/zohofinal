@@ -5797,6 +5797,9 @@ def add_journal(request):
             accounts = Chart_of_Accounts.objects.filter(company=dash_details)
             print("c")
             print(accounts)
+            customer = Customer.objects.filter(company=dash_details)
+            employee=payroll_employee.objects.filter(company=dash_details)
+            vendor=Vendor.objects.filter(company=dash_details)
             journal_no = request.POST.get('journal_no')
             reference_no = ''
             jon = JournalRecievedIdModel.objects.filter(company=dash_details)
@@ -5967,6 +5970,9 @@ def add_journal(request):
                 'reference_no': reference_no,
                  'last':last,
                  'accounts':accounts,
+                 'customers':customer,
+                 'employees':employee,
+                 'vendors':vendor,
             }
             return render(request, 'zohomodules/manual_journal/add_journal.html',context)
 
@@ -5982,6 +5988,9 @@ def add_journal(request):
             print(allmodules)
             jour = JournalRecievedIdModel.objects.filter(staff=company_details)
             accounts = Chart_of_Accounts.objects.filter(company=company_details.company)
+            customer = Customer.objects.filter(company=company_details.company)
+            employee=payroll_employee.objects.filter(company=company_details.company)
+            vendor=Vendor.objects.filter(company=company_details.company)
         
             journal_no = request.POST.get('journal_no')
             reference_no = ''
@@ -6155,6 +6164,9 @@ def add_journal(request):
                  'last':last,
                  'jour':jour,
                  'accounts':accounts,
+                 'customers':customer,
+                 'employees':employee,
+                 'vendors':vendor,
                  'company':comp,
             }
 
@@ -6295,6 +6307,8 @@ def delete_journal(request, journal_id):
             'journal_entries':journal_entries,
         }
         return render(request,'zohomodules/manual_journal/manual_journal.html',context)
+    
+
 
 
 def add_journal_comment(request, journal_id):
@@ -6330,11 +6344,14 @@ def add_journal_comment(request, journal_id):
             )
         return redirect('journal_overview', journal_id=journal_id)
 
-def delete_journal_comment(request, comment_id, journal_id):
-    comment = get_object_or_404(JournalComment, id=comment_id, journal_id=journal_id)
-    comment.delete()
-    return redirect('journal_overview', journal_id=journal_id)
 
+def delete_journal_comment(request, id):
+    if 'login_id' not in request.session:
+        return redirect('/')
+    cmt = JournalComment.objects.get(id=id)
+    jnId = cmt.journal.id  # Corrected from cmt.invoice.id to cmt.journal.id
+    cmt.delete()
+    return redirect('journal_overview', journal_id=jnId)  # Corrected from jnId to journal_id=jnId
 
 def create_account_jour(request):                                                                #new by tinto mt
     login_id = request.session['login_id']
@@ -6621,6 +6638,7 @@ def create_account_jour(request):                                               
 
     return redirect('add_journal')
 
+
 def edit_journal(request, journal_id):
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):
@@ -6631,8 +6649,232 @@ def edit_journal(request, journal_id):
     if log_details.user_type == "Company":
         dash_details = CompanyDetails.objects.get(login_details=log_details)
         allmodules = ZohoModules.objects.get(company=dash_details, status='New')
-        journal = get_object_or_404(Journal, id=journal_id, company=dash_details)
+        journal = Journal.objects.filter(company=dash_details, id=journal_id).first()
         journal_entries = JournalEntry.objects.filter(journal=journal)
+        employee = payroll_employee.objects.filter(company=dash_details)
+        customer = Customer.objects.filter(company=dash_details)
+        vendor= Vendor.objects.filter(company=dash_details)
+        account = Chart_of_Accounts.objects.filter(company=dash_details)
+
+        if request.method == 'POST':
+            date = request.POST.get('date')
+            journal_no = request.POST.get('journal_no')
+            notes = request.POST.get('notes')
+            currency = request.POST.get('currency')
+            cash_journal = request.POST.get('cash_journal') == 'True'
+
+            journal.date = date
+            journal.journal_no = journal_no
+            journal.notes = notes
+            journal.currency = currency
+            journal.cash_journal = cash_journal
+
+            # Handle attachment
+            new_attachment = request.FILES.get('attachment')
+            if new_attachment:
+                journal.attachment = new_attachment
+
+            journal.save()
+
+            # Clear existing entries and add new ones
+            JournalEntry.objects.filter(journal=journal).delete()
+
+            account_list = request.POST.getlist('account')
+            description_list = request.POST.getlist('description')
+            contact_list = request.POST.getlist('contact')
+            debits_list = request.POST.getlist('debits')
+            credits_list = request.POST.getlist('credits')
+
+            total_debit = 0
+            total_credit = 0
+
+            for i in range(len(account_list)):
+                account = account_list[i]
+                description = description_list[i]
+                contact = contact_list[i]
+                debits = debits_list[i]
+                credits = credits_list[i]
+
+                journal_entry = JournalEntry(
+                    journal=journal,
+                    account=account,
+                    description=description,
+                    contact=contact,
+                    debits=debits,
+                    credits=credits
+                )
+                journal_entry.save()
+
+                total_debit += float(debits) if debits else 0
+                total_credit += float(credits) if credits else 0
+
+            difference = total_debit - total_credit
+
+            journal.total_debit = total_debit
+            journal.total_credit = total_credit
+            journal.difference = difference
+            journal.save()
+
+            # Create transaction history
+            JournalTransactionHistory.objects.create(
+                company=dash_details,
+                login_details=log_details,
+                journal=journal,
+                action='Edited',
+            )
+
+            return redirect('journal_overview', journal_id=journal_id)
+
+        context = {
+            'log_details': log_details,
+            'details': dash_details,
+            'allmodules': allmodules,
+            'journal': journal,
+            'journal_entries': journal_entries,
+            'accounts': account,
+            'employees': employee,
+            'customers': customer,
+            'vendors':vendor,
+        }
+        return render(request, 'zohomodules/manual_journal/edit_journal.html', context)
+    elif log_details.user_type == "Staff":
+        dash_details = StaffDetails.objects.get(login_details=log_details)
+        allmodules = ZohoModules.objects.get(company=dash_details.company, status='New')
+        journal = Journal.objects.filter(staff=dash_details, id=journal_id).first()
+        journal_entries = JournalEntry.objects.filter(journal=journal)
+        accounts = Chart_of_Accounts.objects.filter(company=dash_details.company)
+        customer = Customer.objects.filter(company=dash_details.company)
+        employee = payroll_employee.objects.filter(company=dash_details.company)
+        vendor = Vendor.objects.filter(company=dash_details.company)
+
+        if request.method == 'POST':
+            date = request.POST.get('date')
+            journal_no = request.POST.get('journal_no')
+            notes = request.POST.get('notes')
+            currency = request.POST.get('currency')
+            cash_journal = request.POST.get('cash_journal') == 'True'
+
+            journal.date = date
+            journal.journal_no = journal_no
+            journal.notes = notes
+            journal.currency = currency
+            journal.journal_type = cash_journal
+
+            new_attachment = request.FILES.get('attachment')
+            if new_attachment:
+                journal.attachment = new_attachment
+
+            journal.save()
+
+            # Clear existing entries and add new ones
+            JournalEntry.objects.filter(journal=journal).delete()
+
+            account_list = request.POST.getlist('account')
+            description_list = request.POST.getlist('description')
+            contact_list = request.POST.getlist('contact')
+            debits_list = request.POST.getlist('debits')
+            credits_list = request.POST.getlist('credits')
+
+            total_debit = 0
+            total_credit = 0
+
+            for i in range(len(account_list)):
+                account = account_list[i]
+                description = description_list[i]
+                contact = contact_list[i]
+                debits = debits_list[i]
+                credits = credits_list[i]
+
+                journal_entry = JournalEntry(
+                    journal=journal,
+                    account=account,
+                    description=description,
+                    contact=contact,
+                    debits=debits,
+                    credits=credits
+                )
+                journal_entry.save()
+
+                total_debit += float(debits) if debits else 0
+                total_credit += float(credits) if credits else 0
+
+            debit_difference = total_debit - total_credit
+            credit_difference = total_credit - total_debit
+
+            journal.total_debit = total_debit
+            journal.total_credit = total_credit
+            journal.debit_difference = debit_difference
+            journal.credit_difference = credit_difference
+
+            journal.save()
+
+            # Create transaction history
+            JournalTransactionHistory.objects.create(
+                staff=dash_details,
+                login_details=log_details,
+                journal=journal,
+                action='Edited',
+            )
+
+            return redirect('journal_overview', journal_id=journal_id)
+
+        context = {
+            'details': dash_details,
+            'allmodules': allmodules,
+            'journal': journal,
+            'journal_entries': journal_entries,
+            'accounts': accounts,
+            'customers': customer,
+            'employees': employee,
+            'vendors':vendor,
+        }
+        return render(request, 'zohomodules/manual_journal/edit_journal.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''def edit_journal(request, journal_id):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+        else:
+            return redirect('/')
+    log_details = LoginDetails.objects.get(id=log_id)
+    if log_details.user_type == "Company":
+        dash_details = CompanyDetails.objects.get(login_details=log_details)
+        allmodules = ZohoModules.objects.get(company=dash_details, status='New')
+        journal = Journal.objects.filter(company=dash_details)
+        jour = get_object_or_404(Journal, id=journal_id)
+        journal_entries = JournalEntry.objects.filter(journal=jour)
+        employee = payroll_employee.objects.get(company=dash_details)
+        customer = Customer.objects.get(company=dash_details)
+        account = Chart_of_Accounts.objects.get(company=dash_details)
 
 
         
@@ -6651,13 +6893,18 @@ def edit_journal(request, journal_id):
             journal.currency = currency
             journal.cash_journal = cash_journal       
             journal.user = request.user
-            old=journal.attachment
-            new = request.FILES.get('attachment')
-            if old !=None and new==None:
-                journal.attachment=old
-            else:
-                journal.attachment=new            
-            journal.save()
+            # Handle attachment
+                        
+            old_attachments = journal.values_list('attachment', flat=True)
+            old_attachment = old_attachments[0] if old_attachments else None
+
+            new_attachment = request.FILES.get('attachment')
+            if old_attachment and not new_attachment:
+                journal.update(attachment=old_attachment)
+            elif new_attachment:
+                journal.update(attachment=new_attachment)          
+            for j in journal:
+                j.save()
 
             account_list = request.POST.getlist('account')
             description_list = request.POST.getlist('description')
@@ -6678,7 +6925,7 @@ def edit_journal(request, journal_id):
                 credits = credits_list[i]
 
                 journal_entry = JournalEntry(
-                    journal=journal,
+                    journal=jour,
                     account=account,
                     description=description,
                     contact=contact,
@@ -6695,7 +6942,8 @@ def edit_journal(request, journal_id):
             journal.total_debit = total_debit
             journal.total_credit = total_credit
             journal.difference = difference
-            journal.save()
+            for j in journal:
+                j.save()
             JournalTransactionHistory.objects.create(
                         company=dash_details,
                         login_details=log_details,
@@ -6709,16 +6957,23 @@ def edit_journal(request, journal_id):
             'details': dash_details,
             'allmodules': allmodules,
             'journal': journal,
-            'journal_entries': journal_entries,
+            'jour': jour,
+            'journal_entries':journal_entries,
+            'accounts':account,
+            'employees':employee,
+            'customers':customer,
             
         }
         return render(request, 'zohomodules/manual_journal/edit_journal.html', context)
     elif log_details.user_type == "Staff":
         dash_details = StaffDetails.objects.get(login_details=log_details)
         allmodules = ZohoModules.objects.get(company=dash_details.company, status='New')
-        journal = get_object_or_404(Journal, id=journal_id, company=dash_details.company)
-        journal_entries = JournalEntry.objects.filter(journal=journal)
+        journal = Journal.objects.filter(staff=dash_details)
+        jour = get_object_or_404(Journal, id=journal_id)
+        journal_entries = JournalEntry.objects.filter(journal=jour)
         accounts = Chart_of_Accounts.objects.filter(company=dash_details.company)
+        customer = Customer.objects.filter(company=dash_details.company)
+        employee = payroll_employee.objects.filter(company=dash_details.company)
         
         if request.method == 'POST':
             date = request.POST.get('date')
@@ -6736,14 +6991,19 @@ def edit_journal(request, journal_id):
             journal.journal_type = cash_journal       
             journal.user = request.user
             # Handle attachment
-            old_attachment = journal.attachment
+                        
+            old_attachments = journal.values_list('attachment', flat=True)
+            old_attachment = old_attachments[0] if old_attachments else None
+
             new_attachment = request.FILES.get('attachment')
             if old_attachment and not new_attachment:
-                journal.attachment = old_attachment
+                journal.update(attachment=old_attachment)
             elif new_attachment:
-                journal.attachment = new_attachment
+                journal.update(attachment=new_attachment)
+
             # Save the changes to the Journal object
-            journal.save()
+            for j in journal:
+                j.save()
 
             account_list = request.POST.getlist('account')
             description_list = request.POST.getlist('description')
@@ -6754,7 +7014,7 @@ def edit_journal(request, journal_id):
             total_debit = 0
             total_credit = 0
 
-            JournalEntry.objects.filter(journal=journal).delete()
+            JournalEntry.objects.filter(journal=jour).delete()
 
             for i in range(len(account_list)):
                 account = account_list[i]
@@ -6764,7 +7024,7 @@ def edit_journal(request, journal_id):
                 credits = credits_list[i]
 
                 journal_entry = JournalEntry(
-                    journal=journal,
+                    journal=jour,
                     account=account,
                     description=description,
                     contact=contact,
@@ -6772,20 +7032,25 @@ def edit_journal(request, journal_id):
                     credits=credits
                 )
                 journal_entry.save()
-
+                
                 total_debit += float(debits) if debits else 0
                 total_credit += float(credits) if credits else 0
 
-            difference = total_debit - total_credit
+            debit_difference = total_debit - total_credit
+            credit_difference = total_credit - total_debit
 
             journal.total_debit = total_debit
             journal.total_credit = total_credit
-            journal.difference = difference
-            journal.save()
+            journal.debit_difference = debit_difference
+            journal.credit_difference=credit_difference
+
+               
+            for j in journal:
+                j.save()
             JournalTransactionHistory.objects.create(
-                        company=dash_details,
+                        staff=dash_details,
                         login_details=log_details,
-                        journal=journal,
+                        journal=jour,
                         action='Edited',
                     )
             
@@ -6795,10 +7060,13 @@ def edit_journal(request, journal_id):
             'details': dash_details,
             'allmodules': allmodules,
             'journal': journal,
-            'journal_entries': journal_entries,
+            'jour': jour,
+            'journal_entries':journal_entries,
             'accounts':accounts,
+            'customers':customer,
+            'employees':employee,
         }
-        return render(request, 'zohomodules/manual_journal/edit_journal.html', context)
+        return render(request, 'zohomodules/manual_journal/edit_journal.html', context)'''
 
 
 

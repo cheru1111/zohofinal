@@ -156,16 +156,16 @@
                 <ol class="breadcrumb text-light">
                     {% if log_details.user_type == 'Company' %} <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning">Dashboard</a></li>{% endif %}
                     {% if log_details.user_type == 'Staff' %} <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning">Dashboard</a></li>{% endif %}
-                    <li class="breadcrumb-item"><a href="" class="text-warning">All price lists</a></li>
-                    <li class="breadcrumb-item"><a href="" class="text-warning">Over view</a></li>
-                    <li class="breadcrumb-item" aria-current="page">Edit price list</li>
+                    <li class="breadcrumb-item"><a href="{% url 'manual_journal' %}" class="text-warning">All journal </a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'journal_overview' journal.id %}" class="text-warning">Over view</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Edit journal </li>
                 </ol>
             </nav>
             <div class="overflow-auto  mt-lg-4 mt-2 rounded p-4" style="background-color: rgb(0, 0, 0);color: white;">
 
                 <h1 class="text-white">Edit Journal</h1>
                 <br>
-                <form method="post" action="{% url 'edit_journal' jour.id %}">
+                <form method="post" action="{% url 'edit_journal' journal.id %}">
                     {% csrf_token %}
 
                     <div class="row">
@@ -173,7 +173,7 @@
                             <label for="">Date:</label>
                         </div>
                         <div class="col-md-6">
-                          <input type="date" name="date" class="form-control form-control bg-light text-black" value="{{ jour.date|date:'Y-m-d' }}" required>
+                          <input type="date" name="date" class="form-control form-control bg-light text-black" value="{{ journal.date|date:'Y-m-d' }}" required>
                         </div>
                     </div>
                        
@@ -183,7 +183,7 @@
                               <label for="">Journal No:</label>
                             </div>
                             <div class="col-md-6">
-                              <input type="text" name="journal_no" class="form-control form-control bg-light text-black" value="{{ jour.journal_no }}"  id="journal_no"
+                              <input type="text" name="journal_no" class="form-control form-control bg-light text-black" value="{{ journal.journal_no }}"  id="journal_no"
                                 required>
                             </div>
                             <br>
@@ -214,7 +214,7 @@
                               <label for="">Reference No:</label>
                             </div>
                             <div class="col-md-6">
-                              <input type="text" name="reference_no" class="form-control form-control bg-light text-black" value="{{ jour.reference_no }}"readonly>
+                              <input type="text" name="reference_no" class="form-control form-control bg-light text-black" value="{{ journal.reference_no }}"readonly>
                             </div>
                           </div>
                           <div class="row mt-3 mb-5">
@@ -263,7 +263,8 @@
                             <tbody>
                                 
                             <tr>
-                                <td class="text-light">1</td>
+                                {% for entry in journal_entries %}
+                                <td class="text-light">{{ forloop.counter }}</td>
                                 <td>
                                     
                                     <div id="custom_dropdowns" class="position-relative">
@@ -274,7 +275,7 @@
                                                     {% for account in accounts %}
                                                         
                                                             <p class="account_drop_hovers ps-3 p-2 m-0">{{ account.account_name }}</p>
-                                                            <span hidden>{{ account.id }}</span>
+<span hidden>{{ account.id }}</span>
                                                         
                                                     {% endfor %}
                                                 {% else %}
@@ -283,11 +284,11 @@
                                                 
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                                            
                                     </div>
                                     
                                     <input hidden id="account_value" type="text" name="account_id" >
-                                    <input type="text" class="form-control bg-light text-dark" id="account_list" name="account" placeholder="search..."value="{{ journal_entries.journal.account }}" required>
+                                    <input type="text" class="form-control text-dark bg-light" id="account_list" name="account" placeholder="search..."value="{{ entry.account }}" required>
                                     
                                 <script>
                                     $(document).ready(function(){
@@ -325,8 +326,10 @@
                                     })</script>
                                 
                                 </td>
-                                <td><input type="text" name="description" class="form-control text-dark"
-                                    value="{{  journal_entries.journal.description }}"></td>
+                               
+                                <td><input type="text" name="description" class="form-control text-dark bg-light"
+                                    value="{{  entry.description }}"></td>
+                                    
                                 <td>
                                     <div id="custom_dropdown1" class="position-relative">
                                         <div class="position-absolute bg-success rounded bg-light text-dark border border-dark" style="margin-top: 3rem;">
@@ -334,30 +337,24 @@
                                                 <div style="overflow-y: auto; height: 10rem;">
                                                     {% if customers %}
                                                         {% for customer in customers %}
-                                                            {% if customer.user == request.user %}
-                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ customer.customerName }}</p>
+                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ customer.title }}{{ customer.first_name }} {{ customer.last_name }}</p>
                                                                 <span hidden>{{ customer.id }}</span>
-                                                            {% endif %}
                                                         {% endfor %}
                                                     {% else %}
                                                         <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No customers are available</h6>
                                                     {% endif %}
                                                     {% if vendors %}
                                                         {% for vendor in vendors %}
-                                                            {% if vendor.user == request.user %}
-                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ vendor.vendor_display_name }}</p>
+                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ vendor.title }}{{ vendor.first_name }}{{ vendor.last_name }}</p>
                                                                 <span hidden>{{ vendor.id }}</span>
-                                                            {% endif %}
                                                         {% endfor %}
                                                     {% else %}
                                                         <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No vendors are available</h6>
                                                     {% endif %}
                                                     {% if employees %}
-                                                        {% for employee in employees %}
-                                                            {% if employee.user == request.user %}
-                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ employee.first_name }}{{ employee.last_name }}</p>
+                                                        {% for emp in employees %}
+                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ emp.title}} {{ emp.first_name}} {{ emp.last_name}}</p>
                                                                 <span hidden>{{ employee.id }}</span>
-                                                            {% endif %}
                                                         {% endfor %}
                                                     {% else %}
                                                         <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No employees are available</h6>
@@ -366,9 +363,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <input hidden id="customer_value" type="text" name="customer_id" value="">
-                                    <input type="text" class="form-control bg-light text-dark" id="customer_list" name="contact" placeholder="search..." value="{{  journal_entries.journal.contact}}" required>
-                                <!--<input hidden id="vendor_value" type="text" name="vendor_id" value="">
+                                    <input type="text" class="form-control bg-light text-dark" id="customer_list" name="contact" placeholder="search..." value="{{  entry.contact}}" >
+                                    
+                                    <!--<input hidden id="vendor_value" type="text" name="vendor_id" value="">
                                 <input type="text" class="form-control bg-light text-dark" id="vendor_list" name="vendor_name" placeholder="search..." required>
                                 <input hidden id="employee_value" type="text" name="employee_id" value="">
                                 <input type="text" class="form-control bg-light text-dark" id="employee_list" name="employee_name" placeholder="search..." required>-->
@@ -476,16 +475,18 @@
                                     })
                                 </script>
                                 </td>
-                                <td><input type="number" name="debits" class="form-control text-dark" value="{{  journal_entries.journal.debits }}"
+                                
+                                <td><input type="number" name="debits" class="form-control text-dark bg-light" value="{{ entry.debits }}"
                                     onchange="calculateTotals()"></td>
-                                <td><input type="number" name="credits" class="form-control text-dark"
-                                    value="{{  journal_entries.journal.credits }}" onchange="calculateTotals()"></td>
+                                <td><input type="number" name="credits" class="form-control text-dark bg-light"
+                                    value="{{  entry.debits }}" onchange="calculateTotals()"></td>
+                                    
                                     <td><button type="button" class="btn btn-outline-danger p-1" onclick="deleteRow(this)"
                                         style="width:25px; height: 25px; border-radius: 90% ">
                                         <i class="fa fa-window-close bg-dark text-danger"></i></button></td>
-                    
+                                        
                             </tr>
-                            
+                            {% endfor %}
                             </tbody>
                         </table>
                         <button type="button" style="color: rgb(218, 164, 48);" class="btn btn-outline-secondary ml-1 text-capitalize"
@@ -495,7 +496,7 @@
                             <div class="col-md-6">
                             <div class="form-group">
                                 <label for="">Notes:</label>
-                                <textarea name="notes" class="form-control text-dark"
+                                <textarea name="notes" class="form-control text-dark bg-light"
                                 style="height: 90px;">{{ journal.notes }}</textarea>
                             </div>
                             <div class="form-group text-white">
@@ -517,16 +518,16 @@
                                 <tr>
                                     <td class="text-light">Total Amount</td>
                                     <td><input type="number" class="form-control text-light" id="totalDebit" placeholder="0"
-                                        value="{{ jour.total_debit }}"></td>
+                                        value="{{ journal.total_debit }}"></td>
                                     <td><input type="number" class="form-control text-light" id="totalCredit" placeholder="0"
-                                        value="{{ jour.total_credit }}"></td>
+                                        value="{{ journal.total_credit }}"></td>
                                 </tr>
                                 <tr>
                                     <td class="text-light">Difference</td>
                                     <td><input type="number" class="form-control text-light" id="debitDifference" placeholder="0"
-                                        value="{{ jour.debit_difference }}"></td>
+                                        value="{{ journal.debit_difference }}"></td>
                                     <td><input type="number" class="form-control text-light" id="creditDifference" placeholder="0"
-                                        value="{{ jour.credit_difference }}"></td>
+                                        value="{{ journal.credit_difference }}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -2671,7 +2672,7 @@
               <input type="text" class="form-control bg-light text-dark" id="account_list_${rowIndex}" name="account" placeholder="Search..." oninput="filterAccounts(${rowIndex})" onclick="toggleDropdownVisibility(${rowIndex})" required>
                   `;
               rowIndex++;
-              descriptionCell.innerHTML = '<input type="text" name="description" class="form-control text-dark">';
+              descriptionCell.innerHTML = '<input type="text" name="description" class="form-control text-dark bg-light">';
               contactCell.innerHTML = `
               <div id="custom_dropdown1_${rowIndex}" class="position-relative">
                   <div class="position-absolute bg-success rounded bg-light text-dark border border-dark" style="margin-top: 3rem;">
@@ -2680,30 +2681,30 @@
                               <div id="contact_options_${rowIndex}">
                                   {% if customers %}
                                       {% for customer in customers %}
-                                          {% if customer.user == request.user %}
-                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ customer.customerName }}</p>
+                                          
+                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ customer.title }}{{ customer.first_name }} {{ customer.last_name }}</p>
                                               <span hidden>{{ customer.id }}</span>
-                                          {% endif %}
+                                          
                                       {% endfor %}
                                   {% else %}
                                       <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No customers are available</h6>
                                   {% endif %}
                                   {% if vendors %}
                                       {% for vendor in vendors %}
-                                          {% if vendor.user == request.user %}
-                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ vendor.vendor_display_name }}</p>
+                                    
+                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ vendor.title }}{{ vendor.first_name }}{{ vendor.last_name }}</p>
                                               <span hidden>{{ vendor.id }}</span>
-                                          {% endif %}
+                                          
                                       {% endfor %}
                                   {% else %}
                                       <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No vendors are available</h6>
                                   {% endif %}
                                   {% if employees %}
-                                      {% for employee in employees %}
-                                          {% if employee.user == request.user %}
-                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ employee.first_name }}{{ employee.last_name }}</p>
+                                      {% for emp in employees %}
+                    
+                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ emp.title}} {{ emp.first_name}} {{ emp.last_name}}</p>
                                               <span hidden>{{ employee.id }}</span>
-                                          {% endif %}
+                                          
                                       {% endfor %}
                                   {% else %}
                                       <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No employees are available</h6>
@@ -2714,11 +2715,11 @@
                   </div>
               </div>
               <input hidden id="customer_value_${rowIndex}" type="text" name="customer_id" value="">
-              <input type="text" class="form-control bg-light text-dark" id="customer_list_${rowIndex}" name="contact" placeholder="Search..." oninput="filterContacts(${rowIndex})"  onclick="toggleDropdownVisibility1(${rowIndex})" required>
+              <input type="text" class="form-control bg-light text-dark" id="customer_list_${rowIndex}" name="contact" placeholder="Search..." oninput="filterContacts(${rowIndex})"  onclick="toggleDropdownVisibility1(${rowIndex})">
           `;
           
-              debitsCell.innerHTML = '<input type="number" name="debits" class="form-control text-dark" onchange="calculateTotals()">';
-              creditsCell.innerHTML = '<input type="number" name="credits" class="form-control text-dark" onchange="calculateTotals()">';
+              debitsCell.innerHTML = '<input type="number" name="debits" class="form-control text-dark bg-light" onchange="calculateTotals()">';
+              creditsCell.innerHTML = '<input type="number" name="credits" class="form-control text-dark bg-light" onchange="calculateTotals()">';
               actionCell.innerHTML = '<button type="button" class="btn btn-outline-danger p-1" onclick="deleteRow(this)" style="width:25px; height: 25px; border-radius: 90%"><i class="fa fa-window-close bg-dark text-danger"></i></button>';
           
               // Initialize custom dropdowns after adding a new row

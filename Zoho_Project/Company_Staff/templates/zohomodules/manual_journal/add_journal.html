@@ -158,7 +158,7 @@
                     <ol class="breadcrumb text-light">
                         {% if log_details.user_type == 'Company' %} <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning">Dashboard</a></li>{% endif %}
                         {% if log_details.user_type == 'Staff' %} <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning">Dashboard</a></li>{% endif %}
-                        <li class="breadcrumb-item"><a href="{% url 'all_price_lists' %}" class="text-warning">Manual Journal</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'manual_journal' %}" class="text-warning">Manual Journal</a></li>
                         <li class="breadcrumb-item" aria-current="page">New journal</li>
                     </ol>
                 </nav>
@@ -307,29 +307,6 @@
                                                         <h6 class="account_drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed;pointer-events: none;">No accounts are available</h6>
                                                     {% endif %}
 
-                                                    <!--{% if accounts %}
-                                                        {% for account in accounts %}
-                                                           {% if account.user == request.user or account.create_status == 'Active' %}
-                                                                {% if request.session.user_type == "Company" %}
-                                                                    {% if account.user_type == "Company" %}
-                                                                        <p class="account_drop_hovers ps-3 p-2 m-0">{{ account.account_name }}</p>
-                                                                        <span hidden>{{ account.id }}</span>
-                                                                    <!--{% endif %}
-                                                                {% else %}
-                                                                    {% if account.user_type == "Staff" %}
-                                                                        <p class="account_drop_hovers ps-3 p-2 m-0">{{ account.account_name }}</p>
-                                                                        <span hidden>{{ account.id }}</span>
-                                                                    {% endif %}
-                                                                {% endif %}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    {% else %}
-                                                        <h6 class="account_drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed;pointer-events: none;">No accounts are available</h6>
-                                                    {% endif %}-->
-
-
-                                                    
-                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -380,10 +357,8 @@
                                                     <div style="overflow-y: auto; height: 10rem;" name="contact">
                                                         {% if customers %}
                                                             {% for customer in customers %}
-                                                                
-                                                                    <p class="drop_hovers ps-3 p-2 m-0">{{ customer.customerName }}</p>
-                                                                    <span hidden>{{ customer.id }}</span>
-                                                                
+                                                                <p class="drop_hovers ps-3 p-2 m-0">{{ customer.title }}{{ customer.first_name }} {{ customer.last_name }}</p>
+                                                                <span hidden>{{ customer.id }}</span>
                                                             {% endfor %}
                                                         {% else %}
                                                             <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No customers are available</h6>
@@ -391,7 +366,7 @@
                                                         {% if vendors %}
                                                             {% for vendor in vendors %}
                                                                 
-                                                                    <p class="drop_hovers ps-3 p-2 m-0">{{ vendor.vendor_display_name }}</p>
+                                                                    <p class="drop_hovers ps-3 p-2 m-0">{{ vendor.title }}{{ vendor.first_name }}{{ vendor.last_name }}</p>
                                                                     <span hidden>{{ vendor.id }}</span>
                                                                 
                                                             {% endfor %}
@@ -401,7 +376,7 @@
                                                         {% if employees %}
                                                             {% for emp in employees %}
                                                                 
-                                                                    <p class="drop_hovers ps-3 p-2 m-0">{{ emp.first_name}} {{ emp.last_name}}</p>
+                                                                    <p class="drop_hovers ps-3 p-2 m-0">{{ emp.title}} {{ emp.first_name}} {{ emp.last_name}}</p>
                                                                     <span hidden>{{ emp.id }}</span>
                                                                 
                                                             {% endfor %}
@@ -2731,7 +2706,7 @@
               <input type="text" class="form-control bg-light text-dark" id="account_list_${rowIndex}" name="account" placeholder="Search..." oninput="filterAccounts(${rowIndex})" onclick="toggleDropdownVisibility(${rowIndex})" required>
                   `;
               rowIndex++;
-              descriptionCell.innerHTML = '<input type="text" name="description" class="form-control text-dark">';
+              descriptionCell.innerHTML = '<input type="text" name="description" class="form-control text-dark bg-light">';
               contactCell.innerHTML = `
               <div id="custom_dropdown1_${rowIndex}" class="position-relative">
                   <div class="position-absolute bg-success rounded bg-light text-dark border border-dark" style="margin-top: 3rem;">
@@ -2740,30 +2715,30 @@
                               <div id="contact_options_${rowIndex}">
                                   {% if customers %}
                                       {% for customer in customers %}
-                                          {% if customer.user == request.user %}
-                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ customer.customerName }}</p>
+                                          
+                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ customer.title }}{{ customer.first_name }} {{ customer.last_name }}</p>
                                               <span hidden>{{ customer.id }}</span>
-                                          {% endif %}
+                                          
                                       {% endfor %}
                                   {% else %}
                                       <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No customers are available</h6>
                                   {% endif %}
                                   {% if vendors %}
                                       {% for vendor in vendors %}
-                                          {% if vendor.user == request.user %}
-                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ vendor.vendor_display_name }}</p>
+                                          
+                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ vendor.title }}{{ vendor.first_name }}{{ vendor.last_name }}</p>
                                               <span hidden>{{ vendor.id }}</span>
-                                          {% endif %}
+                                          
                                       {% endfor %}
                                   {% else %}
                                       <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No vendors are available</h6>
                                   {% endif %}
                                   {% if employees %}
-                                      {% for employee in employees %}
-                                          {% if employee.user == request.user %}
-                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ employee.first_name }}{{ employee.last_name }}</p>
-                                              <span hidden>{{ employee.id }}</span>
-                                          {% endif %}
+                                      {% for emp in employees %}
+                                          
+                                              <p class="drop_hovers ps-3 p-2 m-0 contact-option" onclick="selectContact(${rowIndex}, this)">{{ emp.title}} {{ emp.first_name}} {{ emp.last_name}}</p>
+                                              <span hidden>{{ emp.id }}</span>
+                                          
                                       {% endfor %}
                                   {% else %}
                                       <h6 class="drop_hovers ps-3 p-2 m-0" style="cursor: not-allowed; pointer-events: none;">No employees are available</h6>
@@ -2777,8 +2752,8 @@
               <input type="text" class="form-control bg-light text-dark" id="customer_list_${rowIndex}" name="contact" placeholder="Search..." oninput="filterContacts(${rowIndex})"  onclick="toggleDropdownVisibility1(${rowIndex})">
           `;
           
-              debitsCell.innerHTML = '<input type="number" name="debits" class="form-control text-dark" onchange="calculateTotals()">';
-              creditsCell.innerHTML = '<input type="number" name="credits" class="form-control text-dark" onchange="calculateTotals()">';
+              debitsCell.innerHTML = '<input type="number" name="debits" class="form-control text-dark bg-light" onchange="calculateTotals()">';
+              creditsCell.innerHTML = '<input type="number" name="credits" class="form-control text-dark bg-light" onchange="calculateTotals()">';
               actionCell.innerHTML = '<button type="button" class="btn btn-outline-danger p-1" onclick="deleteRow(this)" style="width:25px; height: 25px; border-radius: 90%"><i class="fa fa-window-close bg-dark text-danger"></i></button>';
           
               // Initialize custom dropdowns after adding a new row
