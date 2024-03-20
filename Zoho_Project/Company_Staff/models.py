@@ -436,7 +436,7 @@ class JournalRecievedIdModel(models.Model):
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     pattern = models.CharField(max_length=255,null=True)
     ref_number = models.CharField(max_length=255,null=True)
-    jn_rec_number = models.CharField(max_length=255,null=True)
+    jn_rec_number = models.CharField(max_length=255,null=True) 
 
       
 class Journal(models.Model):
@@ -447,6 +447,7 @@ class Journal(models.Model):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE, null=True, blank=True)
+    jour = models.ForeignKey(JournalRecievedIdModel, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField(null=True,auto_now_add=True)
     journal_no = models.CharField(max_length=255,null=True)  
     reference_no = models.IntegerField(null=True)
@@ -476,7 +477,7 @@ class JournalEntry(models.Model):
     debits = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     credits = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     
-    
+  
     
     
 class JournalTransactionHistory(models.Model):

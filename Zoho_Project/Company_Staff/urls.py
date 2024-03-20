@@ -160,7 +160,12 @@ urlpatterns = [
     path('delete_journal_comment/<int:id>/', views.delete_journal_comment, name='delete_journal_comment'),
     path('create_account_jour',views.create_account_jour,name='create_account_jour'),
     path('edit_journal/<int:journal_id>/', views.edit_journal, name='edit_journal'),
-    
+    path('downloadJournalSampleImportFile',views.downloadJournalSampleImportFile,name='downloadJournalSampleImportFile'),
+    path('downloadAccountSampleImportFile',views.downloadAccountSampleImportFile,name='downloadAccountSampleImportFile'),
+    path('email_journal/<int:journal_id>/', views.email_journal, name='email_journal'),
+    path('journal_pdf/<int:price_list_id>/', views.journal_pdf, name='journal_pdf'),
+    path("check_journal_num_valid",views.check_journal_num_valid,name="check_journal_num_valid"),
+    path("check_journal_num_valid2",views.check_journal_num_valid2,name="check_journal_num_valid2"),
     
   
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),

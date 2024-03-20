@@ -227,13 +227,7 @@
                           </a>
                           {% endif %}
 
-                          <!--<button id="toggleStatusButton" class="btn btn-outline-warning ms-2 " data-status="{{ jour.status }}" onclick="toggleStatus()">
-                            {% if jour.status == 'save' %}
-                            Save
-                            {% elif jour.status == 'draft' %}
-                            Draft
-                            {% endif %}
-                        </button>-->
+                         
                           <a href="{% url 'edit_journal' jour.id %}" class="text-dark">
                             <button class="btn btn-outline-warning">
                               <i class="fa fa-edit"></i>
@@ -244,14 +238,7 @@
                       <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
                         <button class="btn btn-outline-warning" title="Delete"><i class="fas fa-trash-alt"></i></button>
                       </a>
-                      <!--
-                      <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Upload" onclick="triggerFileInput()">
-                        <i class="mdi mdi-file-upload"></i>
-                    </a>
-                    
-                    <a href="#" class="btn btn-outline-warning text-right px-2 py-2" title="Download Uploaded File" onclick="downloadUploadedFile()">
-                        <span class="mdi mdi-download"></span>
-                    </a>-->
+                      
                     <a class="btn btn-outline-warning ms-2" data-toggle="modal" data-target="#addCommentModal"><i class="fa-regular fa-comment"></i></a>
 
                     <a class="btn btn-outline-warning ms-2 " href="#" data-toggle="modal" data-target="#TransactionHistory"><i class="fa-solid fa-clock-rotate-left"></i></a>
@@ -485,8 +472,8 @@
                             <i class="fa-solid fa-share-nodes"></i>
                         </button>
                         <div class="dropdown-menu text-black">
-                            <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                            <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
+                          <a class="dropdown-item text-dark" href="#" data-toggle="modal" data-target="#EmailModal" >Share to Email</a>
+                          <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
                         </div>
                         
                         <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
@@ -687,8 +674,8 @@
                               <i class="fa-solid fa-share-nodes"></i>
                           </button>
                           <div class="dropdown-menu text-black">
-                              <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                              <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
+                            <a class="dropdown-item text-dark" href="#" data-toggle="modal" data-target="#EmailModal" >Share to Email</a>
+                            <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
                           </div>
                           
                           <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
@@ -896,8 +883,8 @@
                               <i class="fa-solid fa-share-nodes"></i>
                           </button>
                           <div class="dropdown-menu text-black">
-                              <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                              <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
+                            <a class="dropdown-item text-dark" href="#" data-toggle="modal" data-target="#EmailModal" >Share to Email</a>
+                            <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
                           </div>
                           
                           <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
@@ -1110,8 +1097,8 @@
                               <i class="fa-solid fa-share-nodes"></i>
                           </button>
                           <div class="dropdown-menu text-black">
-                              <a class="dropdown-item text-dark" href="mailto:example@example.com">Share to Email</a>
-                              <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
+                            <a class="dropdown-item text-dark" href="#" data-toggle="modal" data-target="#EmailModal" >Share to Email</a>
+                            <li class="dropdown-item text-dark text-decoration-none">{% post_to_whatsapp object_or_url "Share to WhatsApp" %}</li>
                           </div>
                           
                           <a href="{% url 'delete_journal' jour.id %}" class="  text-dark">
@@ -1272,7 +1259,41 @@
                       </div>
           
                     </div>
-            
+            <!----------- modal for email -------------->
+            <div class="modal fade" id="EmailModal">
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+                  <div class="modal-header" style="background: rgb(32, 35, 37);">
+                    <h5 class="m-3 text-uppercase" id="EmailModalLabel" style="color: #fefefe;">Share Journal Transactions Via Email</h5>
+                    <button type="button" class="close text-danger" style="width: 30px;" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                  </div>
+                  <div class="modal-body" style="background: rgb(32, 35, 37);">
+                    <div class="card p-3 m-3">
+                      <form action="{% url 'email_journal' jour.id %}" method="post" class="needs-validation"
+                        id="share_to_email_form" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="form-group">
+                          <label for="emailIds" style="color: #000;">Email IDs</label>
+                          <textarea class="form-control text-dark"  style="color: #000;" name="email_ids" id="emailIds" rows="5"
+                            placeholder="Multiple emails can be added by separating with a comma(,)." required></textarea>
+                        </div>
+                        <div class="form-group mt-2">
+                          <label for="item_unitname"  style="color: #000;">Message(optional)</label>
+                          <textarea name="email_message"  style="color: #000;" id="email_message" class="text-dark form-control" cols=""
+                            rows="4" placeholder="This message will be sent along with details."></textarea>
+                        </div>
+                 
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center" style="border-top: 1px solid #ffff;">
+                      <input type="submit" id="share_with_email"
+                        class="submitShareEmailBtn rounded-pill text-grey w-50 my-4 mx-3" value="SEND MAIL">
+                    </div>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
                         
                           <!--------- add comment ---------------->
                           <div class="modal fade mt-5" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="addCommentModalLabel" aria-hidden="true">
@@ -1385,34 +1406,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-JBnKdD6fzZxB1sdbBUz0qwZRiA84ZgeBp6T5qL/zUa8z+prM7zvmknGQn6uAkeTn5uaqQpIs4s6f6FLSbNPGw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-Bk2IxCYIbW6l0/mD4YKs/wE6xxvCEjVyQVuRj2VuTKlf6Ayb6BjdrM6OtqLZiVNiGKcFtdNPxXEhR9Wx4sLh9g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
-
-
-
-      <script>
-        function sortPriceLists() {
-            var $ul = $('#priceListNames ul');
-            var items = $ul.children('li').get();
-            items.sort(function(a, b) {
-                var keyA = $(a).text();
-                var keyB = $(b).text();
-                return keyA.localeCompare(keyB);
-            });
-            $ul.append(items);
-        }
-          function filterPriceLists() {
-              var $ul = $('#priceListNames ul');
-              var filter = 'Active'; 
-              $ul.children('li').hide().filter(function() {
-                  return $(this).text().includes(filter);
-              }).show();
-          }
-      </script>
     <script>
-
-        function printPriceList() {
-            window.print();
-        }
 
         function toggleStatus() {
             const journalid = {{ jour.id }};

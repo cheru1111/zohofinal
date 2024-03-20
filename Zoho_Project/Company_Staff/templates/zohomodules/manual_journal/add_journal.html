@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 
-
+<script src="https://unpkg.com/htmx.org@1.6.0/dist/htmx.js"></script>
 <style>
     /*.modal {
       z-index: 9999;
@@ -204,35 +204,56 @@
                                     <input type="text" {% if last %}value="{{ last.jn_rec_number }}" placeholder="{{ last.jn_rec_number }}"{% endif %} name="journal_no"  class="form-control form-control bg-light text-black" required>
                                 </div>
                             </div>-->
-                            <div class="row mt-2">
+                            <!--<div class="row mt-2">
                                 <div class="col-md-3">
                                     <label for="journal_no">Journal No:</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" {% if last %}value="{{ last.jn_rec_number }}" placeholder="{{ last.jn_rec_number }}"{% endif %} id="journal_no" name="journal_no" class="form-control form-control bg-light text-black" required>
-                                </div>
-                                <br>
-                                <div class="col-md-3">
+                                </div>=-->                                <!-- Removed the <br> tag here, it's not needed within a row -->
+                                <!--<div class="col-md-3">
                                     <span id="validationMessage" style="color: yellow;"></span>
                                 </div>
                             </div>
-
                             <script>
-                                window.onload = function() {
-                                    document.getElementById("journal_no").addEventListener("input", function() {
-                                        var journalInput = this.value;
-                                        var validationMessage = document.getElementById("validationMessage");
-                                        // Check if the input is a continuous number
-                                        if (!/^\d+$/.test(journalInput)) {
-                                            // If not a continuous number, show validation message
-                                            validationMessage.innerText = "Please enter a valid journal number.";
-                                        } else {
-                                            // If it's a continuous number, clear the validation message
-                                            validationMessage.innerText = "";
-                                        }
-                                    });
-                                };
-                                </script>
+                                $(document).on('change', '#journal_no', function() {
+                                    $('#validationMessage').text('');
+                                    var jrn_num = $(this).val();
+                                    if (jrn_num != "") {
+                                        console.log(jrn_num);
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "{% url 'add_journal' %}",
+                                            data: {
+                                                JrnNum: jrn_num,
+                                            },
+                                            success: function(response) {
+                                                if (response.status) {
+                                                    $('#validationMessage').text('');
+                                                } else {
+                                                    $('#validationMessage').text(response.message);
+                                                }
+                                            }
+                                        })
+                                    }
+                                });
+                            </script>-->
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                  <label for="prof_name">Journal No:</label>
+                                </div>
+                          
+                                <div class="col-md-7">
+                                  <input type="text" {% if last %}value="{{ last.jn_rec_number }}" placeholder="{{ last.jn_rec_number }}"{% endif %} id="journal_no" name="journal_no" class="form-control form-control bg-light text-black" required
+                                  hx-post="{% url 'check_journal_num_valid2' %}"
+                                  hx-trigger="keyup delay:0s"
+                                  hx-target="#check_journal_num_valid_target"
+                                  required>
+                                  <div id="check_journal_num_valid_target"></div>
+                                </div>
+                              </div>
+                            
+                                
 
                             
       

@@ -82,7 +82,23 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
+                                    
                                 </div>
+                                <div class="card p-3 m-3" style="background-color: black;">        
+                                    <div class="row" style="background-color: black;">
+                                      <div class="col-md-12 col-lg-12 col-sm-12" style="background-color: black;">
+                                        <h5 class="text-danger">IMPORTANT:</h5>
+                                        <p class="text-light">File should have column name & order should be in the given format(Uppercase)</p><br>
+                                        
+                                        <p class="text-light">Status should be given in one of the following format <br>
+                                            save  or draft
+                                        </p>
+                                       
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <a href="{% url 'downloadJournalSampleImportFile' %}" class="text-primary" style="font-size:medium;">Download Sample Journal File here</a> <br>
+                                  <a href="{% url 'downloadAccountSampleImportFile' %}" class="text-primary" style="font-size:medium;">Download Sample Account File here</a> <br>
                                 <div class="modal-body">
                                     <form action="{% url 'import_journal_list' %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
