@@ -432,6 +432,7 @@ class PriceListComment(models.Model):
 #-----------------------------------------MANUAL JOURNAL-----------------------------------
 
 class JournalRecievedIdModel(models.Model):
+    user = models.CharField(max_length=200,null=True,blank=True)
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
     staff = models.ForeignKey(StaffDetails, on_delete=models.CASCADE, null=True, blank=True)
     pattern = models.CharField(max_length=255,null=True)

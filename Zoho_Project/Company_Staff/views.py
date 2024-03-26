@@ -5759,65 +5759,30 @@ def downloadAccountSampleImportFile(request):
     wb.save(response)
     return response
 
-
-
-
-
-
-'''def check_journal_num_valid(request):
-    journals = JournalRecievedIdModel.objects.filter(pattern__startswith=str(request.user.id))
-    journal_recieved_number = request.POST.get('journal_no')
-    print(f'================== journal_recieved_number = {journal_recieved_number}==================')
-    if journals.exists():
-        last = journals.last()
-        last_id = last.jn_rec_number
-        print(f'================== last_id = {last_id}==================')
-        if journal_recieved_number == last_id:
-            return True
-        else:
-            return False
-    else:
-       
-        return True'''
-
-def journal(request):
-    return render(request,'zohomodules/manual_journal/add_journal.html')
-
 def check_journal_num_valid2(request):
-    # payments = PaymentRecievedIdModel.objects.filter(user=request.user.id)
-    # payments_recieved_number = request.POST.get('payments_recieved_number')
-    # if payments.exists():
-    #     last = payments.last()
-    #     last_id = last.pay_rec_number
-    #     if payments_recieved_number == last_id:
-    #         return HttpResponse("")
-    #     else:
-    #         return HttpResponse("<span class='text-danger'>Payment Recieved Number is not Continues</span>")
-    # else:
-    #     # if payments_recieved_number != 'PRN-01':
-    #     #     return HttpResponse("<span class='text-danger'>Payment Recieved Number is not Continues</span>")
-    #     # else:
-    #     #     return HttpResponse("")
-    #     return HttpResponse("")
+    print(request.session['login_id'])
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):
             log_id = request.session['login_id']
-            journals = JournalRecievedIdModel.objects.filter(company=log_id)
-        else:
-            journals = JournalRecievedIdModel.objects.filter(staff=str(request.user.id))
-    journal_recieved_number = request.POST.get('journal_no')
+            journals = JournalRecievedIdModel.objects.filter(user=log_id)
+            if not journals:
+                journals = JournalRecievedIdModel.objects.filter(user=log_id)
+    journal_recieved_number = request.GET['jurnal_val']  
     print(f'================== journal_recieved_number = {journal_recieved_number}  ==================')
     if journals.exists():
         last = journals.last()
         last_id = last.jn_rec_number
         print(f'================== last_id = {last_id}==================')
         if journal_recieved_number == last_id:
-            return HttpResponse("")
+            data = {"valid":"valid"}
+            return JsonResponse(data)
         else:
-            return HttpResponse("<span class='text-danger'>Journal Number is not Continues</span>")
+            data = {"valid":"invalid"}
+            return JsonResponse(data)
     else:
-        print('\n\nnot exist')
-        return HttpResponse("")
+        print('doesnt exist')
+        data = {"valid":"valid"}
+        return JsonResponse(data)
     
 def check_journal_num_valid(request):
     journals = JournalRecievedIdModel.objects.filter(pattern__startswith=str(request.user.id))
@@ -5832,9 +5797,15 @@ def check_journal_num_valid(request):
         else:
             return False
     else:
-       
+        # if payments_recieved_number != 'PRN-01':
+        #     return HttpResponse("<span class='text-danger'>Payment Recieved Number is not Continues</span>")
+        # else:
+        #     return HttpResponse("")
         return True
-    
+
+def journal(request):
+    return render(request,'zohomodules/manual_journal/add_journal.html')
+
 def add_journal(request):
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):
@@ -6016,6 +5987,9 @@ def add_journal(request):
                     jn_id.pattern = pattern
                     jn_id.jn_rec_number = f'{pattern}{2:02}'
                     jn_id.save()
+
+                jn_id.user = request.session['login_id']
+                jn_id.save()
             
                 if not is_valid:
                     return redirect('add_journal')
@@ -6209,6 +6183,9 @@ def add_journal(request):
                     jn_id.pattern = pattern
                     jn_id.jn_rec_number = f'{pattern}{2:02}'
                     jn_id.save()
+                
+                jn_id.user = request.session['login_id']
+                jn_id.save()
             
                 if not is_valid:
                     return redirect('add_journal')
@@ -6231,404 +6208,6 @@ def add_journal(request):
             }
 
     return render(request, 'zohomodules/manual_journal/add_journal.html',context)
-
-
-'''def add_journal(request):
-    if 'login_id' in request.session:
-        if request.session.has_key('login_id'):
-            log_id = request.session['login_id']
-        else:
-            return redirect('/')
-    
-        log_details = LoginDetails.objects.get(id=log_id)
-        print("hloo")
-        print(log_details)
-
-        if log_details.user_type == "Company":
-            dash_details = CompanyDetails.objects.get(login_details=log_details)
-            print("a")
-            print(dash_details)
-            allmodules = ZohoModules.objects.get(company=dash_details, status='New')
-            print("b")
-            print(allmodules)
-            accounts = Chart_of_Accounts.objects.filter(company=dash_details)
-            print("c")
-            print(accounts)
-            customer = Customer.objects.filter(company=dash_details)
-            employee=payroll_employee.objects.filter(company=dash_details)
-            vendor=Vendor.objects.filter(company=dash_details)
-            journal_no = request.POST.get('journal_no')
-            reference_no = ''
-            jon = JournalRecievedIdModel.objects.filter(company=dash_details)
-            last = ''
-            if jon.exists():
-                last = jon.last()
-
-
-            if request.method == 'POST':
-                
-                user = request.user
-                date = request.POST.get('date')
-                journal_no = request.POST.get('journal_no')
-                reference_no=request.POST.get('reference_no')
-
-                notes = request.POST.get('notes')
-                currency = request.POST.get('currency')
-                cash_journal = request.POST.get('cash_journal') == 'True'
-
-                attachment = request.FILES.get('attachment')
-                print("o")
-                print(attachment)
-                status = ""  # Default value for status
-                if 'Draft' in request.POST:
-                    status="draft"
-                if "Save" in request.POST:
-                    status="save"  
-
-                journal = Journal(
-                    date=date,
-                    journal_no=journal_no,
-                    reference_no=reference_no,
-                    notes=notes,
-                    currency=currency,
-                    journal_type=cash_journal,
-                    attachment=attachment,
-                    status=status,
-                    company=dash_details if log_details.user_type == "Company" else None   
-                )
-                if attachment:
-                    # File was uploaded, proceed with saving it
-                    journal.attachment = attachment
-                journal.save()
-                
-                JournalTransactionHistory.objects.create(
-                    company=dash_details  if log_details.user_type == "Company" else None,
-                    login_details=log_details,
-                    journal=journal,
-                    action='Created',
-                )
-
-                account_list = request.POST.getlist('account')
-                description_list = request.POST.getlist('description')
-                contact_list = request.POST.getlist('contact')
-                debits_list = request.POST.getlist('debits')
-                credits_list = request.POST.getlist('credits')
-
-                total_debit = 0
-                total_credit = 0
-
-                for i in range(len(account_list)):
-                    account = account_list[i]
-                    description = description_list[i]
-                    contact = contact_list[i]
-                    debits = debits_list[i]
-                    credits = credits_list[i]
-
-                    journal_entry = JournalEntry(
-                        journal=journal,
-                        account=account,
-                        description=description,
-                        contact=contact,
-                        debits=debits,
-                        credits=credits
-                    )
-                    journal_entry.save()
-
-                    total_debit += float(debits) if debits else 0
-                    total_credit += float(credits) if credits else 0
-
-                debit_difference = total_debit - total_credit
-                credit_difference = total_credit - total_debit
-
-                journal.total_debit = total_debit
-                journal.total_credit = total_credit
-                journal.debit_difference = debit_difference
-                journal.credit_difference=credit_difference
-                journal_no = request.POST.get('journal_no')    
-                reference_no = request.POST.get('reference_no')
-                journal.reference_no=reference_no
-                print(reference_no)
-                journal.save()
-        
-                is_valid = check_journal_num_valid(request)
-                print("good")
-                print(is_valid)
-                if not is_valid:
-                    messages.error(request, 'Invalid journal number. Please enter a valid and continuous numeric sequence.')
-
-                if JournalRecievedIdModel.objects.filter(company=dash_details).exists():
-                    jn = JournalRecievedIdModel.objects.filter(company=dash_details)
-                    jn_id = jn.last()
-                    jn_id1 = jn.last()
-
-                    # Check if there is a second last journal record
-                    if jn.exclude(id=jn_id.id).last():
-                        jn_id_second_last = jn.exclude(id=jn_id.id).last()
-                        pattern = jn_id_second_last.pattern
-                    else:
-                        jn_id_second_last = jn.first()
-                        pattern = jn_id_second_last.pattern
-
-                    if journal_no != jn_id.jn_rec_number and journal_no != '':
-                        # Creating a new JournalRecievedIdModel instance
-                        jn_id = JournalRecievedIdModel(company=dash_details)
-                        count_for_ref_no = JournalRecievedIdModel.objects.filter(company=dash_details.id).count()
-                        jn_id.pattern = pattern
-                        jn_id.save()
-
-                        # Using count_for_ref_no + 1 as the reference number
-                        ref_num = int(count_for_ref_no) + 2
-                        jn_id.ref_number = f'{ref_num:02}'
-
-                        jn_id.jn_rec_number = jn_id1.jn_rec_number
-                        jn_id.save()
-                    else:
-                        # Creating a new JournalRecievedIdModel instance
-                        jn_id = JournalRecievedIdModel(company=dash_details)
-                        count_for_ref_no = JournalRecievedIdModel.objects.filter(company=dash_details.id).count()
-                        jn_id.pattern = pattern
-                        jn_id.save()
-
-                        # Using count_for_ref_no + 1 as the reference number
-                        ref_num = int(count_for_ref_no) + 2
-                        jn_id.ref_number = f'{ref_num:02}'
-
-                        # Incrementing the jn_rec_number
-                        jn_rec_num = ''.join(i for i in jn_id1.jn_rec_number if i.isdigit())
-                        jn_rec_num = int(jn_rec_num)+1
-                        print("#################################")
-                        print(f"-----------------{jn_id1}-----------------")
-                        jn_id.jn_rec_number = f'{pattern}{jn_rec_num:02}'
-                        print(jn_id.jn_rec_number)
-                        jn_id.save()
-                        
-                else:
-                    # Creating a new JournalRecievedIdModel instance
-                    jn_id = JournalRecievedIdModel(company=dash_details)
-                    jn_id.save()
-
-                    # Setting initial values for ref_number, pattern, and jn_rec_number
-                    jn_id.ref_number = f'{2:02}'
-
-                    pattern = ''.join(i for i in journal_no if not i.isdigit())
-                    jn_id.pattern = pattern
-                    jn_id.jn_rec_number = f'{pattern}{2:02}'
-                    jn_id.save()
-            
-                if not is_valid:
-                    return redirect('add_journal')
-                else:
-                    return redirect('manual_journal')
-            context = {
-                 'log_id':log_id,
-                 'log_details':log_details,
-                'details': dash_details,
-                'allmodules': allmodules,
-                'reference_no': reference_no,
-                 'last':last,
-                 'accounts':accounts,
-                 'customers':customer,
-                 'employees':employee,
-                 'vendors':vendor,
-            }
-            return render(request, 'zohomodules/manual_journal/add_journal.html',context)
-
-        elif log_details.user_type == 'Staff':
-            company_details = StaffDetails.objects.get(login_details=log_details)
-            print("c")
-            print(company_details)
-            comp=CompanyDetails.objects.get(id=company_details.company.id)
-            print("d")
-            print(comp)
-            allmodules = ZohoModules.objects.get(company=company_details.company, status='New')
-            print("e")
-            print(allmodules)
-            jour = JournalRecievedIdModel.objects.filter(staff=company_details)
-            accounts = Chart_of_Accounts.objects.filter(company=company_details.company)
-            customer = Customer.objects.filter(company=company_details.company)
-            employee=payroll_employee.objects.filter(company=company_details.company)
-            vendor=Vendor.objects.filter(company=company_details.company)
-        
-            journal_no = request.POST.get('journal_no')
-            reference_no = ''
-            jon = JournalRecievedIdModel.objects.filter(staff=company_details)
-            last = ''
-            if jon.exists():
-                last = jon.last()
-
-
-            if request.method == 'POST':
-                
-                user = request.user
-                date = request.POST.get('date')
-                journal_no = request.POST.get('journal_no')
-                reference_no=request.POST.get('reference_no')
-                notes = request.POST.get('notes')
-                currency = request.POST.get('currency')
-                cash_journal = request.POST.get('cash_journal') == 'True'
-
-                attachment = request.FILES.get('attachment')
-                print("o")
-                print(attachment)
-                
-                status = ""  # Default value for status
-             
-                if 'Draft' in request.POST:
-                    status="draft"
-                if "Save" in request.POST:
-                    status="save"
-                journal = Journal(
-                    #jour=jour,
-                    date=date,
-                    journal_no=journal_no,
-                    reference_no=reference_no,
-                    notes=notes,
-                    currency=currency,
-                    journal_type=cash_journal,
-                    attachment=attachment, 
-                    status=status,
-                    staff=company_details if log_details.user_type == 'Staff' else None 
-                )
-                if attachment:
-                    # File was uploaded, proceed with saving it
-                    journal.attachment = attachment
-                journal.save()
-                
-                JournalTransactionHistory.objects.create(
-                    staff=company_details if log_details.user_type == 'Staff' else None,
-                    login_details=log_details,
-                    journal=journal,
-                    action='Created',
-                )
-            
-                
-                account_list = request.POST.getlist('account')
-                description_list = request.POST.getlist('description')
-                contact_list = request.POST.getlist('contact')
-                debits_list = request.POST.getlist('debits')
-                credits_list = request.POST.getlist('credits')
-
-                total_debit = 0
-                total_credit = 0
-
-                for i in range(len(account_list)):
-                    account = account_list[i]
-                    description = description_list[i]
-                    contact = contact_list[i]
-                    debits = debits_list[i]
-                    credits = credits_list[i]
-
-                    journal_entry = JournalEntry(
-                        journal=journal,
-                        account=account,
-                        description=description,
-                        contact=contact,
-                        debits=debits,
-                        credits=credits
-                    )
-                    journal_entry.save()
-
-                    total_debit += float(debits) if debits else 0
-                    total_credit += float(credits) if credits else 0
-
-                debit_difference = total_debit - total_credit
-                credit_difference = total_credit - total_debit
-
-                journal.total_debit = total_debit
-                journal.total_credit = total_credit
-                journal.debit_difference = debit_difference
-                journal.credit_difference=credit_difference
-                journal_no = request.POST.get('journal_no')    
-                reference_no = request.POST.get('reference_no')
-                journal.reference_no=reference_no
-                print(reference_no)
-                journal.save()
-        
-                is_valid = check_journal_num_valid(request)
-                print(is_valid)
-                if not is_valid:
-                    messages.error(request, 'Invalid journal number. Please enter a valid and continuous numeric sequence.')
-
-                if JournalRecievedIdModel.objects.filter(staff=company_details).exists():
-                    jn = JournalRecievedIdModel.objects.filter(staff=company_details)
-                    jn_id = jn.last()
-                    jn_id1 = jn.last()
-
-                    # Check if there is a second last journal record
-                    if jn.exclude(id=jn_id.id).last():
-                        jn_id_second_last = jn.exclude(id=jn_id.id).last()
-                        pattern = jn_id_second_last.pattern
-                    else:
-                        jn_id_second_last = jn.first()
-                        pattern = jn_id_second_last.pattern
-
-                    if journal_no != jn_id.jn_rec_number and journal_no != '':
-                        # Creating a new JournalRecievedIdModel instance
-                        jn_id = JournalRecievedIdModel(staff=company_details)
-                        count_for_ref_no = JournalRecievedIdModel.objects.filter(staff=company_details.id).count()
-                        jn_id.pattern = pattern
-                        jn_id.save()
-
-                        # Using count_for_ref_no + 1 as the reference number
-                        ref_num = int(count_for_ref_no) + 2
-                        jn_id.ref_number = f'{ref_num:02}'
-
-                        jn_id.jn_rec_number = jn_id1.jn_rec_number
-                        jn_id.save()
-                    else:
-                        # Creating a new JournalRecievedIdModel instance
-                        jn_id = JournalRecievedIdModel(staff=company_details)
-                        count_for_ref_no = JournalRecievedIdModel.objects.filter(staff=company_details.id).count()
-                        jn_id.pattern = pattern
-                        jn_id.save()
-
-                        # Using count_for_ref_no + 1 as the reference number
-                        ref_num = int(count_for_ref_no) + 2
-                        jn_id.ref_number = f'{ref_num:02}'
-
-                        # Incrementing the jn_rec_number
-                        jn_rec_num = ''.join(i for i in jn_id1.jn_rec_number if i.isdigit())
-                        jn_rec_num = int(jn_rec_num)+1
-                        print("#################################")
-                        print(f"-----------------{jn_id1}-----------------")
-                        jn_id.jn_rec_number = f'{pattern}{jn_rec_num:02}'
-                        print(jn_id.jn_rec_number)
-                        jn_id.save()
-                        
-                else:
-                    # Creating a new JournalRecievedIdModel instance
-                    jn_id = JournalRecievedIdModel(staff=company_details)
-                    jn_id.save()
-
-                    # Setting initial values for ref_number, pattern, and jn_rec_number
-                    jn_id.ref_number = f'{2:02}'
-
-                    pattern = ''.join(i for i in journal_no if not i.isdigit())
-                    jn_id.pattern = pattern
-                    jn_id.jn_rec_number = f'{pattern}{2:02}'
-                    jn_id.save()
-            
-                if not is_valid:
-                    return redirect('add_journal')
-                else:
-                    return redirect('manual_journal')
-                
-            context = {
-                 'log_id':log_id,
-                 'log_details':log_details,
-                'details':company_details,
-                'allmodules': allmodules,
-                'reference_no': reference_no,
-                 'last':last,
-                 'jour':jour,
-                 'accounts':accounts,
-                 'customers':customer,
-                 'employees':employee,
-                 'vendors':vendor,
-                 'company':comp,
-            }
-
-    return render(request, 'zohomodules/manual_journal/add_journal.html',context)'''
 
 
 

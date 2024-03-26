@@ -150,7 +150,7 @@ urlpatterns = [
     
     #================================manual journal==============================
     path('manual_journal', views.manual_journal, name='manual_journal'),
-    path('add_journal', views.add_journal, name='add_journal'),
+    path('add_journal/', views.add_journal, name='add_journal'),
     path('journal_overview/<int:journal_id>/', views.journal_overview, name='journal_overview'),
     path('journal',views.journal,name="journal"),
     path('import_journal_list',views.import_journal_list,name='import_journal_list'),

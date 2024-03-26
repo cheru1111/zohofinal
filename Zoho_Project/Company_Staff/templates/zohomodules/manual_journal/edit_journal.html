@@ -178,36 +178,22 @@
                     </div>
                        
 
-                        <div class="row mt-3 mb-5">
+                        
+                        <div class="row mt-3">
                             <div class="col-md-3">
-                              <label for="">Journal No:</label>
+                              <label for="prof_name">Journal No:</label>
                             </div>
+                      
                             <div class="col-md-6">
-                              <input type="text" name="journal_no" class="form-control form-control bg-light text-black" value="{{ journal.journal_no }}"  id="journal_no"
-                                required>
+                              <input type="text"  id="journal_no" name="journal_no" class="form-control form-control bg-light text-black" value="{{ journal.journal_no }}" required
+                              hx-post="{% url 'check_journal_num_valid2' %}"
+                              hx-trigger="keyup delay:0s"
+                              hx-target="#check_journal_num_valid_target"
+                              required>
+                              <!-- <div id="check_journal_num_valid_target"></div> -->
+                              <div id="hide_when_condition_false" class="text-danger" hidden>Journal Recieved Number is not Continues</div>
                             </div>
-                            <br>
-                                <div class="col-md-3">
-                                    <span id="validationMessage" style="color: yellow;"></span>
-                                </div>
-                        </div>
-
-                        <script>
-                            window.onload = function() {
-                                document.getElementById("journal_no").addEventListener("input", function() {
-                                    var journalInput = this.value;
-                                    var validationMessage = document.getElementById("validationMessage");
-                                    // Check if the input is a continuous number
-                                    if (!/^\d+$/.test(journalInput)) {
-                                        // If not a continuous number, show validation message
-                                        validationMessage.innerText = "Please enter a valid journal number.";
-                                    } else {
-                                        // If it's a continuous number, clear the validation message
-                                        validationMessage.innerText = "";
-                                    }
-                                });
-                            };
-                            </script>
+                          </div>
 
                         <div class="row mt-2">
                             <div class="col-md-3">
@@ -248,7 +234,7 @@
                                     <!-- data-target="#newaccount" -->
                                     <th style="color:white; display: flex; align-items: center;">
                                         Select Account
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 5px;">
+                                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 5px;">
                                             <i class="fa fa-plus" style="color: white;"></i>
                                         </button>
                                     </th>
@@ -489,7 +475,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <button type="button" style="color: rgb(218, 164, 48);" class="btn btn-outline-secondary ml-1 text-capitalize"
+                        <button type="button" style="color: white;" class="btn btn-outline-warning ml-1 text-capitalize"
                             onclick="addRow()">+</button>
                         <br><br>
                         <div class="row mt-4">
@@ -509,9 +495,11 @@
                                 style="background-color:rgba(5, 5, 5, 0.4); border: 1px solid rgba(128, 128, 128, 0.6);">
                                 <thead>
                                 <tr>
-                                    <th>Subtotal</th>
-                                    <th>Debit</th>
-                                    <th>Credit</th>
+                                    <td class="text-light">Sub total</td>
+                                    <td><input type="number" class="form-control text-light" id="subtotalDebit" placeholder="0"
+                                        value="{{ journal.total_debit }}"></td>
+                                    <td><input type="number" class="form-control text-light"  id="subtotalCredit" placeholder="0"
+                                        value="{{ journal.total_credit }}"></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -2651,7 +2639,7 @@
           
               numberCell.innerHTML = rowCount;
               accountCell.innerHTML = `
-              <div id="custom_dropdowns_${rowIndex}" class="position-relative">
+              <div id="custom_dropdowns_${rowIndex}" class="position-relative" style="display:none;">
                   <div class="position-absolute bg-success rounded bg-light text-dark border border-dark" style="margin-top: 3rem;">
                       <div id="custom-dropdown_${rowIndex}">
                           <div style="overflow-y: auto; height: 10rem;" name="account">
@@ -2674,7 +2662,7 @@
               rowIndex++;
               descriptionCell.innerHTML = '<input type="text" name="description" class="form-control text-dark bg-light">';
               contactCell.innerHTML = `
-              <div id="custom_dropdown1_${rowIndex}" class="position-relative">
+              <div id="custom_dropdown1_${rowIndex}" class="position-relative" style="display:none;">
                   <div class="position-absolute bg-success rounded bg-light text-dark border border-dark" style="margin-top: 3rem;">
                       <div id="custom-dropdown1">
                           <div style="overflow-y: auto; height: 10rem;" name="contact">
@@ -2718,8 +2706,8 @@
               <input type="text" class="form-control bg-light text-dark" id="customer_list_${rowIndex}" name="contact" placeholder="Search..." oninput="filterContacts(${rowIndex})"  onclick="toggleDropdownVisibility1(${rowIndex})">
           `;
           
-              debitsCell.innerHTML = '<input type="number" name="debits" class="form-control text-dark bg-light" onchange="calculateTotals()">';
-              creditsCell.innerHTML = '<input type="number" name="credits" class="form-control text-dark bg-light" onchange="calculateTotals()">';
+              debitsCell.innerHTML = '<input type="number" name="debits" class="form-control text-dark bg-light" onchange="calculateTotals()" value=0>';
+              creditsCell.innerHTML = '<input type="number" name="credits" class="form-control text-dark bg-light" onchange="calculateTotals()" value=0>';
               actionCell.innerHTML = '<button type="button" class="btn btn-outline-danger p-1" onclick="deleteRow(this)" style="width:25px; height: 25px; border-radius: 90%"><i class="fa fa-window-close bg-dark text-danger"></i></button>';
           
               // Initialize custom dropdowns after adding a new row
@@ -2828,35 +2816,77 @@
           
       
       
-      function calculateTotals() {
-          var debitInputs = document.querySelectorAll('input[name="debits"]');
-          var creditInputs = document.querySelectorAll('input[name="credits"]');
-          var totalDebit = 0;
-          var totalCredit = 0;
+          function calculateTotals() {
+            var debitInputs = document.querySelectorAll('input[name="debits"]');
+            var creditInputs = document.querySelectorAll('input[name="credits"]');
+            var totalDebit = 0;
+            var totalCredit = 0;
+        
+            debitInputs.forEach(function(input) {
+                totalDebit += parseFloat(input.value) || 0;
+            });
+        
+            creditInputs.forEach(function(input) {
+                totalCredit += parseFloat(input.value) || 0;
+            });
+        
+            document.getElementById('totalDebit').value = totalDebit.toFixed(2);
+            document.getElementById('totalCredit').value = totalCredit.toFixed(2);
+        
+            var difference = totalDebit - totalCredit;
+        
+            if (difference < 0) {
+                document.getElementById('debitDifference').value = Math.abs(difference).toFixed(2);
+                document.getElementById('creditDifference').value = "0.00";
+            } else {
+                document.getElementById('debitDifference').value = "0.00";
+                document.getElementById('creditDifference').value = difference.toFixed(2);
+            }
+        
+            // Calculating subtotals
+            var subtotalDebit = 0;
+            var subtotalCredit = 0;
+
+            debitInputs.forEach(function(input) {
+                subtotalDebit += parseFloat(input.value) || 0;
+            });
+        
+            creditInputs.forEach(function(input) {
+                subtotalCredit += parseFloat(input.value) || 0;
+            });
+        
+            document.getElementById('subtotalDebit').value = subtotalDebit.toFixed(2);
+            document.getElementById('subtotalCredit').value = subtotalCredit.toFixed(2);
+        }
+    </script>
+        <script>
+            $(document).ready(function(){
+                $('#journal_no').on('input',function(){
+                    var data_send = {
+                        "jurnal_val": ""+$(this).val()
+                    }
+                    $.ajax({
+                        url: "{% url 'check_journal_num_valid2' %}",
+                        type: 'GET',
+                        data: data_send,
+                        dataType: 'json',
+                        success: function(response){
+                            if(response.valid=="valid")
+                            {
+                                $('#hide_when_condition_false').attr("hidden",true)
+                            }
+                            else{
+                                $('#hide_when_condition_false').attr("hidden",false)
+                            }
+                        },
+                        error:function(error){
+    
+                        }
+                    })
+                })
+            })
+          </script>
       
-          debitInputs.forEach(function (input) {
-              totalDebit += parseFloat(input.value) || 0;
-          });
-      
-          creditInputs.forEach(function (input) {
-              totalCredit += parseFloat(input.value) || 0;
-          });
-      
-          document.getElementById('totalDebit').value = totalDebit.toFixed(2);
-          document.getElementById('totalCredit').value = totalCredit.toFixed(2);
-      
-          var difference = totalDebit - totalCredit;
-      
-          if (difference < 0) {
-              document.getElementById('debitDifference').value = Math.abs(difference).toFixed(2);
-              document.getElementById('creditDifference').value = "0.00";
-          } else {
-              document.getElementById('debitDifference').value = "0.00";
-              document.getElementById('creditDifference').value = difference.toFixed(2);
-          }
-      }
-      
-      </script>
       
       <script src="path/to/jquery.min.js"></script>
       <script src="path/to/bootstrap.min.js"></script>
