@@ -19,7 +19,86 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
   integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wyj73RNMIpiD6bq5D2ZAdfPI4mM1iS6L4" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<style>
+  .ribbon .ribbon-inner {
+    text-align: center;
+    color: #fff;
+    top: -20px;
+    left: -90px;
+    width: 120px;
+    padding: 3px;
+    /* position: relative;
+    transform: rotate(-45deg); */
+}
+.ribbon .ribbon-open {
+    background-color: rgb(218, 164, 48);
+    border-color: #1c72b4;
+}
+:root {
+    --body-bg: rgb(204, 204, 204);
+    --white: #ffffff;
+    --darkWhite: #ccc;
+    --black: #000000;
+    --dark: #615c60;
+    --themeColor: #22b8d1;
+    --pageShadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
 
+.top-content {
+  padding-bottom: 15px;
+}
+
+.logo img {
+  height: 60px;
+}
+
+.top-left p {
+  margin: 0;
+  color: #000000;
+}
+
+.top-left .graphic-path {
+  width: 195px;
+  height: 40px;
+  position: relative;
+}
+
+.top-left .graphic-path::before {
+  content: "";
+  height: 20px;
+  background-color: var(--dark);
+  position: absolute;
+  left: 15px;
+  right: 0;
+  top: -15px;
+  z-index: 2;
+}
+
+.top-left .graphic-path::after {
+  content: "";
+  height: 22px;
+  width: 17px;
+  background: var(--black);
+  position: absolute;
+  top: -13px;
+  left: 6px;
+  transform: rotate(45deg);
+}
+
+.top-left .graphic-path p {
+  /* color: var(--white); */
+  height: 40px;
+  left: 0;
+  right: 0;
+  text-transform: uppercase;
+  background-color:rgb(218, 164, 48);
+  /* font: 26px; */
+  z-index: 3;
+  position: absolute;
+  padding-left: 10px;
+}
+
+</style>
 
 <style>
   .modal {
@@ -173,7 +252,7 @@
                               <div class="d-flex justify-content-between text-white mt-2">
                                 <span>{{ v.journal_no }}</span>
                                 {% if v.status == 'draft' %}
-                                <span class="status draft" style="color: #F86F03;">{{ v.status }}</span>
+                                <span class="status draft text-light" style="color: #F86F03;">{{ v.status }}</span>
                                 {% elif v.status == 'save' %}
                                 <span class="status save text-light">{{ v.status }}</span>
                                 {% else %}
@@ -189,23 +268,24 @@
                     
                     
                     <!--------- overview right side -------------------->
+                    
                     <div class="col-md-8 ml-1  mb-5 " id="overviewdiv">
                       <div class="row">
                         <div class="col-md-7">
                           <a class="text-white" style="font-size: 1.5rem;">
-                            
+                            <h3 class="text-white">Manual Journal</h3>
                           </a>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6">
-                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;color:white;"><i
-                              class="fas fa-eye"></i> Overview</a>
-                              <a class="btn" id="overviewbtn" onclick="totemplate()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning xsmall_btn btn-warning" id="overviewbtn" onclick="tooverview()" style="color:black;"><i
+                              class="fas fa-eye" style="color:black;"></i> Overview</a>
+                              <a class="btn btn-outline-warning" id="overviewbtn" onclick="totemplate()" >
                                 <i class="fa fa-file-alt"></i> Template</a>
 
                           
-                          <a class="btn" id="overviewbtn" onclick="show_slip()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning" id="overviewbtn" onclick="show_slip()" >
                             <i class="fas fa-receipt"></i> Slip</a>
                         </div>
           
@@ -291,21 +371,45 @@
           
                       <div class="row" id="div-to-pdf"
                       style="background-color: #c4c1c1fd; height: auto; margin-left:1px; margin-right: 1rem; ">
-        
-                      <div class="row text-center">
-                        <h2 style="color: #000000;"><br>MANUAL JOURNAL
-                          <hr>
-                        </h2>
+
+
+                      <div class="history_highlight pt-3 px-2 d-flex">
+                        <div class="col-12 d-flex justify-content-start align-items-center">
+                          {% if transaction_history %}
+                            
+                          {% with last_transaction=transaction_history.last %}
+                              {% if last_transaction %}
+                                  {% if last_transaction.action == 'Created' %}
+                            <p class="m-0" style="font-size: 1.07rem; font-weight: 500; color: #017500;">Created by :</p>
+                            {% else %}
+                            <p class="m-0" style="font-size: 1.07rem; font-weight: 500; color: #E91E63;">Last Edited by :</p>
+                            {% endif %}
+                            {% endif %}
+                            <span class="ms-2" style="font-size: 1.15rem; font-weight: 500; color: #383838;">{{last_transaction.login_details.first_name}} {{last_transaction.login_details.last_name}}</span>
+                            <span class="ms-5" style="color: #383838;">{{last_transaction.date}}</span>
+                            {% endwith %}
+                            
+                          {% endif %}
+                        </div>
                       </div>
+                      <div class="row">
+                        <h1 class="text-black mt-3 ps-5" style="text-align:left;">#{{ jour.journal_no}}</h1>
+
+                                <hr>
+                      </div>
+                      
                       
                       <div class="gen-info col-6 " style="padding-left: 3rem; ">
                         {% if log_details.user_type == "Company" %}
+                        {% if jour.company.company_name %}
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Company name</label></div>
                           <div class="col-7">
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{jour.company.company_name}}</p>
                           </div>
                         </div>
+                        {% endif %}
+                        {% if jour.company.email %}
 
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Email </label></div>
@@ -313,6 +417,9 @@
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{jour.company.email}}</p>
                           </div>
                         </div>
+                        {% endif %}
+
+                        {% if jour.company.contact %}
 
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Mobile </label></div>
@@ -320,20 +427,26 @@
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{jour.company.contact}}</p>
                           </div>
                         </div>
+                        {% endif %}
 
+                        {% if jour.company.address %}
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Address </label></div>
                           <div class="col-7">
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{jour.company.address}}</p>
                           </div>
                         </div>
+                        {% endif %}
                         {% elif log_details.user_type == "Staff" %}
+                        {% if jour.staff.company.company_name %}
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Company name</label></div>
                           <div class="col-7">
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{jour.staff.company.company_name}}</p>
                           </div>
                         </div>
+                        {% endif %}
+                        {% if jour.staff.login_details.email %}
 
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Email </label></div>
@@ -341,6 +454,8 @@
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{jour.staff.login_details.email}}</p>
                           </div>
                         </div>
+                        {% endif %}
+                        {% if jour.staff.contact %}
 
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Mobile </label></div>
@@ -349,13 +464,18 @@
                           </div>
                         </div>
                         {% endif %}
+                        {% endif %}
 
+                        {% if jour.notes %}
                         <div class="row mt-3">
                           <div class="col-5"><label  for=""style="color: #000000;">Notes </label></div>
                           <div class="col-7">
                             <p class="bold" style="max-width: 15rem;word-wrap: break-word;color: #000000;">:{{ jour.notes }}</p>
                           </div>
                         </div>
+                        {% endif %}
+                        {% if jour.reference_no %}
+
                         <div class="row mt-3">
                           <div class="col-5"><label style="color: #000000;" for="">Reference no </label></div>
                           
@@ -364,6 +484,10 @@
                           </div>
                           
                         </div>
+                        {% endif %}
+
+                        {% if jour.journal_no %}
+
                         <div class="row mt-3">
                           <div class="col-5"><label style="color: #000000;" for="">Journal No</label></div>
                           <div class="col-7">
@@ -371,6 +495,8 @@
                               :{{jour.journal_no}}</p>
                           </div>
                         </div>
+                        {% endif %}
+                        {% if jour.date %}
                         <div class="row mt-3">
                           <div class="col-5"><label style="color: #000000;" for="">Date </label></div>
                           <div class="col-7">
@@ -378,6 +504,8 @@
                               :{{jour.date}}</p>
                           </div>
                         </div>
+                        {% endif %}
+                        {% if jour.total_debit %}
                         <div class="row mt-3">
                           <div class="col-5"><label style="color: #000000;" for="">Amount </label></div>
                           <div class="col-7">
@@ -385,6 +513,7 @@
                               :{{jour.total_debit}}</p>
                           </div>
                         </div>
+                        {% endif %}
                         
                         
                       </div>
@@ -405,18 +534,22 @@
                               <p class="bold text-light">:{{entry.account}}</p>
                             </div>
                           </div>
+                          {% if entry.description %}
                           <div class="row mt-2">
                             <div class="col-5 text-light"><label for="">Description </label></div>
                             <div class="col">
                               <p class="bold text-light">:{{entry.description}}</p>
                             </div>
                           </div>
+                          {% endif %}
+                          {% if entry.contact %}
                           <div class="row mt-2">
                             <div class="col-5 text-light"><label for="">Contact </label></div>
                             <div class="col">
                               <p class="bold text-light">:{{entry.contact}}</p>
                             </div>
                           </div>
+                          {% endif %}
                           <div class="row mt-2">
                             <div class="col-5 text-light"><label for="">Credits </label></div>
                             <div class="col">
@@ -472,17 +605,17 @@
                       <div class="row">
                         <div class="col-md-7">
                           <a class="text-white" style="font-size: 1.5rem;">
-                            
+                            <h3 class="text-white">Manual Journal</h3>
                           </a>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6">
-                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;color:white;"><i
-                              class="fas fa-eye"></i> Overview</a>
-                              <a class="btn" id="overviewbtn" onclick="totemplate()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning xsmall_btn btn-warning" id="overviewbtn" onclick="tooverview()" style="color:black;"><i
+                              class="fas fa-eye" style="color:black;"></i> Overview</a>
+                              <a class="btn btn-outline-warning" id="overviewbtn" onclick="totemplate()">
                                 <i class="fa fa-file-alt"></i> Template</a>
-                          <a class="btn" id="overviewbtn" onclick="show_slip()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning"  id="overviewbtn" onclick="show_slip()">
                             <i class="fas fa-receipt"></i> Slip</a>
                         </div>
           
@@ -662,17 +795,17 @@
                       <div class="row">
                         <div class="col-md-7">
                           <a class="text-white" style="font-size: 1.5rem;">
-                            
+                            <h3 class="text-white">Manual Journal</h3>
                           </a>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6">
-                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;color:white;"><i
-                              class="fas fa-eye"></i> Overview</a>
-                              <a class="btn" id="overviewbtn" onclick="totemplate()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning xsmall_btn btn-warning" id="overviewbtn" onclick="tooverview()" style="color:black;"><i
+                              class="fas fa-eye" style="color:black;"></i> Overview</a>
+                              <a class="btn btn-outline-warning"  id="overviewbtn" onclick="totemplate()">
                                 <i class="fa fa-file-alt"></i> Template</a>
-                          <a class="btn" id="overviewbtn" onclick="show_slip()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning"  id="overviewbtn" onclick="show_slip()">
                             <i class="fas fa-receipt"></i> Slip</a>
                         </div>
           
@@ -716,7 +849,7 @@
           
                       <div class="mt-3 template2 whatToPrint2" style="height: auto;width: 100%; margin-left: -1vh">
           
-                        <section id="selected-area" style="background-color: #c4c1c1fd;height: auto;" class=" p-2 m-2">
+                        <section id="selected-area" style="background-color: white;height: auto;" class=" p-2 m-2">
                           
                           <div class="p-4" >
                             <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
@@ -749,7 +882,7 @@
                                       {{jour.company.contact}}<br><p>
                                   {% elif log_details.user_type == "Staff" %}
                                       <h5 style="font-weight: bold;color: #000;">{{jour.staff.login_details.first_name}}
-                                      {{jour.staff.login_details.last_name}}<h5><br>
+                                      {{jour.staff.login_details.last_name}}<h5>
                                       <p>{{jour.staff.company.company_name}}<br>
                                       {{jour.staff.login_details.email}}<br>
                                       {{jour.staff.contact}}<br><p>
@@ -832,17 +965,17 @@
                       <div class="row">
                         <div class="col-md-7">
                           <a class="text-white" style="font-size: 1.5rem;">
-                           
+                            <h3 class="text-white">Manual Journal</h3>
                           </a>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6">
-                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;color:white;"><i
-                              class="fas fa-eye"></i> Overview</a>
-                              <a class="btn" id="overviewbtn" onclick="totemplate()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning xsmall_btn btn-warning" id="overviewbtn" onclick="tooverview()" style="color:black;"><i
+                              class="fas fa-eye" style="color:black;"></i> Overview</a>
+                              <a class="btn btn-outline-warning" id="overviewbtn" onclick="totemplate()">
                                 <i class="fa fa-file-alt"></i> Template</a>
-                          <a class="btn" id="overviewbtn" onclick="show_slip()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning" id="overviewbtn" onclick="show_slip()" >
                             <i class="fas fa-receipt"></i> Slip</a>
                         </div>
           
@@ -884,9 +1017,9 @@
           
           
                       <div id="template1" class="printTemplates template1">
-                        <div class="my-3 page" style="background-color:  #c4c1c1fd;" id="selected-area2">
-                          <div  style="background-color: rgb(30, 30, 30);width:100%;" class="py-4 pl-5" >
-                            <div class="row px-5 py-2">
+                        <div class="my-3 page" style="background-color:  white;" id="selected-area2">
+                          <div  style="width:100%;" class="py-4 pl-5 bg-warning" >
+                            <div class="row px-3 py-2">
                               <div id="ember2512" class="col-md-4 d-flex justify-content-start tooltip-container ember-view ribbon text-ellipsis">
                                   <div class="text-white d-flex align-items-center px-5 ml-5" style="border-radius: 1vh; background-color:#999999">{{jour.status}}<!----></div>
                               </div>
@@ -937,7 +1070,7 @@
                           </section>
               
                           <section class="product-area mt-2">
-                              <table class="table table-hover table-bordered  template2table" id="table2">
+                              <table class="table table-hover table-bordered  template2table bg-warning" id="table2">
                                 <thead >
                                   <tr class="template3tablehead">
                                     <td style="text-align: center; font-weight:bold; color:black">Account</td>
@@ -946,7 +1079,7 @@
                                     <td style="font-weight:bold; color:black">Credits</td>
                                   </tr>
                               </thead>
-                              <tbody  style="background-color: #999999;">
+                              <tbody  style="background-color:white;">
                                 {% for view in journal_entries %}
                                     <tr>
                                         <td style="color:black; text-align: center;">{{view.account}}</td>
@@ -986,17 +1119,17 @@
                       <div class="row">
                         <div class="col-md-7">
                           <a class="text-white" style="font-size: 1.5rem;">
-                            
+                            <h3 class="text-white">Manual Journal</h3>
                           </a>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6">
-                          <a class="btn" id="overviewbtn" onclick="tooverview()" style="background-color: chocolate;color:white;"><i
-                              class="fas fa-eye"></i> Overview</a>
-                              <a class="btn" id="overviewbtn" onclick="totemplate()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning xsmall_btn btn-warning" id="overviewbtn" onclick="tooverview()" style="color:black;"><i
+                              class="fas fa-eye" style="color:black;"></i> Overview</a>
+                              <a class="btn btn-outline-warning" id="overviewbtn" onclick="totemplate()">
                                 <i class="fa fa-file-alt"></i> Template</a>
-                          <a class="btn" id="overviewbtn" onclick="show_slip()" style="background-color: chocolate;color:white;">
+                          <a class="btn btn-outline-warning" id="overviewbtn" onclick="show_slip()">
                             <i class="fas fa-receipt"></i> Slip</a>
                         </div>
           
@@ -1037,10 +1170,10 @@
           
           
                       <div id="template3" class="template3">
-                        <div class="my-5 page" size="A4" style="background-color: #c4c1c1fd;">
+                        <div class="my-5 page" size="A4" style="background-color: white;">
                           <div class="p-5" id="selected-area3">
                             <div class="row">
-                              <div class="col-sm-12" style="background-color: rgb(30, 30, 30); color: white;">
+                              <div class="col-sm-12 bg-warning" style="background-image: linear-gradient(#cb972f, black); color: white;">
                                   <p style="font-size: 4vh; text-align: center;">MANUAL JOURNAL</p>
                                   
 
@@ -1074,12 +1207,12 @@
                               <div class="col-md-1"></div>
                               <div class="col-md-10"><br>
                                   <table class="table table-hover table-bordered  template3table" id="table3" style="border-collapse: collapse; border-color: #192d3e;">
-                                      <thead >
+                                      <thead>
                                           <tr class="template3tablehead">
-                                              <th class="text-center"  style="color:black; background-color: gray;">ACCOUNT</th>
-                                              <th class="text-center"  style="color:black; background-color: gray;">CONTACT</th>
-                                              <th class="text-center"  style="color:black; background-color: gray;">DEBIT</th>
-                                              <th class="text-center"  style="color:black; background-color: gray;">CREDIT</th>
+                                              <th class="text-center bg-warning"  style="color:black;">ACCOUNT</th>
+                                              <th class="text-center bg-warning"  style="color:black;">CONTACT</th>
+                                              <th class="text-center bg-warning"  style="color:black;">DEBIT</th>
+                                              <th class="text-center bg-warning"  style="color:black;">CREDIT</th>
                                           </tr>
                                       </thead>
                                       <tbody>

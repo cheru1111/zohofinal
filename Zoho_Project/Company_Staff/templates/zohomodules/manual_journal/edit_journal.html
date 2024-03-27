@@ -485,6 +485,7 @@
                                 <textarea name="notes" class="form-control text-dark bg-light"
                                 style="height: 90px;">{{ journal.notes }}</textarea>
                             </div>
+                            <br>
                             <div class="form-group text-white">
                                 <input type="file" name="attachment" class="form-control text-dark bg-light"
                                 value="{{journal.attachment}}">
@@ -525,9 +526,10 @@
                             <div class="col-md-4">
                             <div class="d-flex">
                                 <button type="submit" class="btn mt-2 py-2 rounded-pill text-light w-50 my-4 mx-2"
-                                style="width: 200px; text-align: center;background-color: rgb(218, 164, 48);">Save</button>
-                                <button type="button" class="btn rounded-pill text-light w-50 my-4 mt-2 py-2" onclick="clearForm()"
-                                style="background-color: rgb(218, 164, 48);">Clear</button>
+                                    style="width: 200px; text-align: center;background-color: chocolate;" value="Save" name="Save">Save</button>
+                                
+                                    <a href="{% url 'journal_overview' journal.id %}" type="button" class="btn mt-2 py-2 rounded-pill text-light w-50 my-4 mx-2"
+                                    style="background-color:chocolate;">Cancel</a>
                             </div>
                             </div>
                         </div>
